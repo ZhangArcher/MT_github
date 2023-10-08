@@ -123,7 +123,9 @@ class data_handler_price:
 
     def get_price_data_by_time_intetval(self,start_time :datetime.datetime, end_time:datetime.datetime):
         """
-            return prices data according to time interval
+            get the prices data between [start_time,end_time]
+            include :the data at start_time and the data at start_time
+
 
         :arg
         -------
@@ -139,7 +141,7 @@ class data_handler_price:
         start_timestamp=datetime.datetime.timestamp(start_time)
         end_timestamp = datetime.datetime.timestamp(end_time)
         price_d=self.price_data[self.price_data["timestamp"]>=start_timestamp]
-        result_price=price_d[price_d["timestamp"]<end_timestamp]
+        result_price=price_d[price_d["timestamp"]<=end_timestamp]
         result_price.sort_values("timestamp")
         return result_price
 

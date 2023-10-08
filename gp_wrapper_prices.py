@@ -75,7 +75,9 @@ class gp_wrapper_price:
     def predict(self,start_time: datetime.datetime,
                 end_time: datetime.datetime ,pred_length: int):
         """
-        predict the target price(s) according a time interval with the predicted period
+        predict the target price(s) between [end_time+1,end_time+pred_length] using a GP.
+        This GP is generated/fitted from the data set between [start_time,end_time]
+
         :arg
         -------
             start_time：datetime.datetime
@@ -104,12 +106,20 @@ class gp_wrapper_price:
         """
 
         assert start_time<end_time
-        pred_start_time=end_time
-        pred_times=self.find_all_matched_times_within_length(begin_time=end_time,time_length=pred_length)
+        assert pred_length>=1
+        start_time=self.find_matched_time_with_increment(begin_time=start_time,time_increment=0)
+        end_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=0)
+
 
         # get the train data and the predicted target time.
-        pred_end_time=pred_times.iloc[-1]
-        X_train_array, Y_train_array, X_pred_array, Y_pred_actual  = self.get_data_set(start_time, end_time,pred_start_time,pred_end_time)
+        pred_times = self.find_all_matched_times_by_length(begin_time=end_time, time_length=pred_length)
+        pred_start_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=1)
+        pred_end_time=self.find_matched_time_with_increment(begin_time=end_time, time_increment=pred_length)
+
+
+        # The data set between [start_time,end_time]
+        X_train_array, Y_train_array, X_pred_array, Y_pred_actual  = self.get_data_set(
+            start_time=start_time, end_time=end_time,pred_start_time=pred_start_time,pred_end_time=pred_end_time)
         # train GP
         self.__gp.fit(X_train_array, Y_train_array)
         assert len(X_pred_array)>0
@@ -144,7 +154,11 @@ class gp_wrapper_price:
     def get_data_set(self,start_time:datetime.datetime,end_time:datetime.datetime,
                      pred_start_time:datetime.datetime, pred_end_time:datetime.datetime):
         """
-           get the data sets from company_data that are used to trains GP and used to predict in GP
+
+           get the train data set between [start_time,end_time]
+           and the predict actual data set [pred_start_time,pred_end_time]
+
+
         :arg
         -------
                start_time:datetime.datetime
@@ -170,6 +184,7 @@ class gp_wrapper_price:
         """
         X_train = []
         Y_train = []
+        #   get the train data set between [start_time,end_time]
         train_price_data=self.__company_data.get_price_data_by_time_intetval(start_time,end_time)
         train_price_data.sort_values("timestamp")
         # reconstruct data set for the training and the prediction
@@ -186,10 +201,10 @@ class gp_wrapper_price:
         X_train_array = np.array(X_train)
         Y_train_array = np.array(Y_train)
 
-
+        #   get the predicted data set between  [pred_start_time,pred_end_time]
         pred_price_data = self.__company_data.get_price_data_by_time_intetval(pred_start_time, pred_end_time)
         pred_price_data.sort_values("timestamp")
-        assert pred_start_time < pred_end_time
+        assert pred_start_time <= pred_end_time
         size_of_pred_data = pred_price_data.shape[0]
 
         while(size_of_pred_data==0):
@@ -214,65 +229,42 @@ class gp_wrapper_price:
 
         return X_train_array,Y_train_array,X_pred_array,Y_pred_array
 
-    def find_all_matched_times_within_length(self,begin_time:datetime.datetime,time_length:int):
-        """
-           find all corresponding time points within a time_lendth  from trading times
-        :arg
-        -------
-               begin_time:datetime.datetime
-               time_increment:int
-       :return
-        -------
-              matched_times:pandas.Dataframe
-        """
-        # get time list from data_handler
-        trading_time=self.get_trading_time()
-        trading_time=trading_time.sort_values()
-        #list all prospective time points from target_time
-        next_possible_days=np.where(trading_time>begin_time)
-        new_end_time_index=next_possible_days[0][time_length]
-        new_end_time=trading_time.iloc[new_end_time_index]
 
-        indexs=next_possible_days[0][0:time_length]
-        matched_times=pd.to_datetime(trading_time.iloc[indexs])
+    def get_trading_time(self):
+        return self.__company_data.get_trading_time()
 
+    def find_all_matched_times_by_length(self,begin_time:datetime.datetime,time_length:int):
 
-        return matched_times
+        return util.find_all_matched_times_by_length(trading_time=self.get_trading_time(),begin_time=begin_time,time_length=time_length)
 
 
     def find_matched_time_with_increment(self,begin_time:datetime.datetime,time_increment:int):
-        """
-           find the corresponding time points after time_increment from trading times
-        :arg
-        -------
-               begin_time:datetime.datetime
-               time_increment:int
-       :return
-        -------
-              matched_times:pandas.Dataframe
-        """
-        # get time list from data_handler
-        trading_time=self.get_trading_time()
-        trading_time=trading_time.sort_values()
-        #list all prospective time points from target_time
-        next_possible_days=np.where(trading_time>begin_time)
-        new_end_time_index=next_possible_days[0][time_increment]
-        new_end_time=trading_time.iloc[new_end_time_index]
 
-        indexs=next_possible_days[0][time_increment]
-        matched_time=pd.to_datetime(trading_time.iloc[indexs])
-
-
-        return matched_time
+        return util.find_matched_time_with_increment(trading_time=self.get_trading_time(),
+                                                     begin_time=begin_time,time_increment=time_increment)
 
 
 
-    def predict_cumulative(self,start_time: datetime.datetime, end_time: datetime.datetime,
-                           fitting_length:int, add_correction_term=False):
+    def predict_multi(self,start_time: datetime.datetime, end_time: datetime.datetime,
+                           fitting_windows:int, add_correction_term=False):
         """
 
-       predict the target price with a fixed time windows cumulatively
-       (using coorection_term)
+       predict the target price with a fixed time windows multiple
+       For example:
+       iteration 1 :
+         predict the target price(s) at time point (start_time+fitting_length) using a GP.
+        This GP is generated/fitted from the data set between [start_time,start_time+fitting_length-1]
+
+        iteration 2:
+          predict the target price(s) at time point (start_time+fitting_length+1) using a GP.
+        This GP is generated/fitted by the data set between  [start_time+1,start_time+fitting_length]
+
+        iteration ....
+
+        iteration n:
+          predict the target price(s) at time point (start_time+fitting_length+n-1) using a GP.
+        This GP is generated/fitted by the data set between  [start_time+n-1,start_time+fitting_length+n-2]
+
         :arg
         -------
            start_time：str
@@ -296,11 +288,11 @@ class gp_wrapper_price:
         """
 
         assert start_time < end_time
-        assert fitting_length>0
+        assert fitting_windows>0
 
         # get the cooresponding time points
-        temp_start_time=start_time
-        temp_end_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=fitting_length)
+        temp_start_time=self.find_matched_time_with_increment(begin_time=start_time,time_increment=0)
+        temp_end_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=fitting_windows-1)
 
 
         #initial
@@ -314,10 +306,7 @@ class gp_wrapper_price:
         var_list=[]
 
         #predict next price cumulatively
-        while(temp_end_time<end_time):
-            temp_start_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=1)
-            temp_end_time=self.find_matched_time_with_increment(begin_time=temp_end_time,time_increment=1)
-
+        while(temp_end_time<=end_time):
 
             x_pred, Y_mean, Y_cov,Y_actual, loss_score = self.predict(start_time=temp_start_time,
                                                                       end_time=temp_end_time,pred_length=1)
@@ -331,13 +320,16 @@ class gp_wrapper_price:
             var_list.append(Y_cov[0])
             self.update_eval_score(loss_score)
 
+            temp_start_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=1)
+            temp_end_time=self.find_matched_time_with_increment(begin_time=temp_end_time,time_increment=1)
+
         #collect the result
         df_score=pd.DataFrame(data=loss_score_list,index=time_index)
-        df_score.columns=[fitting_length]
+        df_score.columns=[fitting_windows]
         df_mean=pd.DataFrame(data=mean_list,index=time_index)
-        df_mean.columns = [fitting_length]
+        df_mean.columns = [fitting_windows]
         df_var=pd.DataFrame(data=var_list,index=time_index)
-        df_mean.columns = [fitting_length]
+        df_mean.columns = [fitting_windows]
 
         return df_mean,df_var,df_score
 
@@ -425,9 +417,9 @@ if __name__ == '__main__':
     # score_list=[]
     # mean_list=[]
     # var_list=[]
-    df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
+   # df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
 
-    X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
-
+  #  X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
+    df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)
     print("assd")
-    print("assd")
+    print("asds")

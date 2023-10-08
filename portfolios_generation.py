@@ -101,7 +101,7 @@ class Portfolios:
               data_set_path: str
                   the path of the folder that contains stock prices
 
-          :return
+        :return
         -------
               None
         """
@@ -216,13 +216,18 @@ class Portfolios:
                 The performance
         """
 
-        stock_returns=stock_returns[stock_returns.index<end]
-        stock_returns=stock_returns[stock_returns.index>start]
+        stock_returns=stock_returns[stock_returns.index<=end]
+        stock_returns=stock_returns[stock_returns.index>=start]
         mu = self.calculate_expected_return(stock_returns,is_last_hiostorical_return=True,is_mean_hiostorical_return=False)
         S = pypfopt.risk_models.CovarianceShrinkage(stock_returns,returns_data=True).ledoit_wolf()
 
 
         ef=pypfopt.efficient_frontier.EfficientSemivariance(returns=stock_returns,expected_returns=mu)
+
+        print("mu",mu)
+        print("S", S)
+        print("stock_returns",stock_returns)
+
         ef.add_objective(pypfopt.objective_functions.L2_reg, gamma=2)
         weights = ef.efficient_risk(self.__target_semideviation)
         pf=ef.portfolio_performance(verbose=True)
@@ -356,7 +361,7 @@ class Portfolios:
         handler_trading_time_list=handler_trading_time_list.sort_values()
         handler_start_time=handler_trading_time_list.iloc[0]
         handler_end_time=handler_trading_time_list.iloc[-1]
-        result=(start>handler_start_time)&(end<handler_end_time)
+        result=(start>=handler_start_time)&(end<=handler_end_time)
         #result2=(len(self.__trading_time)==len(handler_trading_time_list))
         return result
 
@@ -423,19 +428,23 @@ class Portfolios:
 
 
         """
+
+        print("assdsd")
         assert type(self.__current_historical_return) == pandas.DataFrame ,\
             "you need to initial self.__current_historical_return (method: generate_historical_returns() ) "
-        assert start>self.__start_time , "we can not find historical_return before "+str(self.__start_time)
-        assert end<self.__end_time , "we can not find historical_return after "+str(self.__end_time)
+        assert start>=self.__start_time , "we can not find historical_return before "+str(self.__start_time)
+        assert end<=self.__end_time , "we can not find historical_return after "+str(self.__end_time)
 
         tmp_start=start
         tmp_end=util.find_matched_time_with_increment(trading_time=self.__trading_time,
-                                             begin_time=start,time_increment=forward_length)
+                                             begin_time=start,time_increment=forward_length-1)
         list_result=[]
         while(tmp_end<end):
             # find the corresponding time of the current portfolio
-            next_time=(self.__current_historical_return[self.__current_historical_return.index>tmp_end]).sort_index().index[0]
+            next_time=util.find_matched_time_with_increment(trading_time=self.__trading_time,
+                                             begin_time=tmp_end,time_increment=1)
             # generate the portfolio and the performance
+            print(str(next_time))
             weights,pf=self.generate_portfolios(stock_returns=self.__current_historical_return,start=tmp_start,end=tmp_end)
 
             tmp_start = util.find_matched_time_with_increment(trading_time=self.__trading_time,
@@ -458,9 +467,9 @@ class Portfolios:
 
 
 if __name__ == '__main__':
-    path_dataset = "data_set_price/long"
-    start_time = "2014-01-01 00:00:00"
-    end_time = "2019-01-01 00:00:00"
+    path_dataset = "data_set_price/short"
+    start_time = "2013-06-01 00:00:00"
+    end_time = "2018-06-01 00:00:00"
 
     ppp = Portfolios(path_dataset)
     #ppp.generate_dataframe_by_time_interval_string(start=start_time, end=end_time)
@@ -468,14 +477,25 @@ if __name__ == '__main__':
     end=util.convert_time_into_datetime(end_time)
 
 
-    start_time1 = "2015-01-01 00:00:00"
-    end_time1 = "2018-01-01 00:00:00"
-    start1 = util.convert_time_into_datetime(start_time1)
-    end1 = util.convert_time_into_datetime(end_time1)
-    #
     ppp.generate_historical_price(start=start,end=end)
     historical_return=ppp.generate_historical_returns()
-    portfolio= ppp.generate_historical_portfolios(start=start1,end=end1,forward_length=10)
+    portfolio= ppp.generate_historical_portfolios(start=start,end=end,forward_length=10)
     profit = ppp.compute_portfolios_profit()
 
-    print("asdsdsd")
+    name="short"
+
+    file_name_csv = "historical_return_" + name + ".csv"
+    historical_return.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
+    file_name_excel = "historical_return_" + name + ".xlsx"
+    historical_return.to_excel(file_name_excel, sheet_name="Sheet1")
+
+
+    file_name_csv="portfolios_"+name+".csv"
+    portfolio.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
+    file_name_excel="portfolios_"+name+".xlsx"
+    portfolio.to_excel(file_name_excel, sheet_name="Sheet1")
+
+    file_name_csv="profit"+name+".csv"
+    profit.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
+    file_name_excel="profit"+name+".xlsx"
+    profit.to_excel(file_name_excel, sheet_name="Sheet1")
