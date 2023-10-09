@@ -264,8 +264,7 @@ class fusion_wrapper_price:
         df_error_fusion_list.columns = [excess_time]
         df_error_long_term_list.columns = [excess_time]
 
-        print("asasas")
-        print("asdss")
+
         return df_error_fusion_list,df_error_long_term_list,time_index
 
     def fusion_next_price_multi(self,start:datetime.datetime,end:datetime.datetime, excess_time=0,fitting_windows=3):
@@ -334,8 +333,6 @@ class fusion_wrapper_price:
         df_error_fusion_list.columns = [excess_time]
         df_error_long_term_list.columns = [excess_time]
 
-        print("asasas")
-        print("asdss")
         return df_error_fusion_list,df_error_long_term_list,time_index
 
 
@@ -372,12 +369,12 @@ if __name__ == '__main__':
     print("df_error_fusion_list: ",np.mean(df_error_fusion_list))
     print("df_error_long_term_list: ", np.mean(df_error_long_term_list))
 
-    fff2 = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file)
-    df_error_fusion_list2, df_error_long_term_list2, time_index2 = fff2.fusion_next_price_multi(start=start_time,
-                                                                                                 end=end_time,
-                                                                                                 fitting_windows=6,
-                                                                                                 excess_time=18)
-
-    print("fusion_next_price_multi")
-    print("df_error_fusion_list: ",np.mean(df_error_fusion_list2))
-    print("df_error_long_term_list: ", np.mean(df_error_long_term_list2))
+    # fff2 = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file)
+    # df_error_fusion_list2, df_error_long_term_list2, time_index2 = fff2.fusion_next_price_multi(start=start_time,
+    #                                                                                              end=end_time,
+    #                                                                                              fitting_windows=6,
+    #                                                                                              excess_time=18)
+    #
+    # print("fusion_next_price_multi")
+    # print("df_error_fusion_list: ",np.mean(df_error_fusion_list2))
+    # print("df_error_long_term_list: ", np.mean(df_error_long_term_list2))

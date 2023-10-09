@@ -159,7 +159,7 @@ def rebalance_portfolio(portfolio:pd.DataFrame):
 
 
     """
-    portfolio=portfolio.map(lambda x : x if np.greater(x,0) else 0.0)
+   # portfolio=portfolio.apply(rebalance_function,axis=1)
 
 
     for ele in portfolio.index:
@@ -168,3 +168,5 @@ def rebalance_portfolio(portfolio:pd.DataFrame):
         portfolio.loc[ele]=(portfolio.loc[ele]).div(sum_row)
     #print("assds")
     return portfolio
+
+

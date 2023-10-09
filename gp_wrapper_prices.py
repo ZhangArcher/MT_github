@@ -362,7 +362,7 @@ class gp_wrapper_price:
                 The score form loss function
         """
 
-        score=np.mean(abs(result-pred_result))
+        score=np.mean((pred_result-result))
 
 
         return score
@@ -419,7 +419,5 @@ if __name__ == '__main__':
     # var_list=[]
    # df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
 
-  #  X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
-    df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)
-    print("assd")
-    print("asds")
+    X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
+    #df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)

@@ -386,19 +386,19 @@ class gp_wrapper_portfolio:
 if __name__ == '__main__':
     #data_file_portfolio="portfolios_short_1day.csv"
     #data_file_return="historical_return_short_1day.csv"
-    data_file_portfolio="portfolios_long.csv"
-    data_file_return="historical_return_long.csv"
+    data_file_portfolio="demo_data/historical_portfolios_long.csv"
+    data_file_return="demo_data/historical_return_long.csv"
 
 
-    start_time = "2016-01-22 00:00:00"
-    end_time = "2018-05-22 00:00:00"
+    start_time = "2015-01-22 00:00:00"
+    end_time = "2017-05-22 00:00:00"
 
     start=util.convert_time_into_datetime(time=start_time)
     end = util.convert_time_into_datetime(time=end_time)
 
     dpp = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return)
-    #target_portfolio,target_profit,pred_portfolio,pred_profit,loss_score=dpp.predict(start_time=start,end_time=end, pred_length=1,with_loss=False)
-    df_mean, df_score = dpp.predict_multi(start_time=start, end_time=end,fitting_windows=16)
+    target_portfolio,target_profit,pred_portfolio,pred_profit,loss_score=dpp.predict(start_time=start,end_time=end, pred_length=1,with_loss=True)
+    #df_mean, df_score = dpp.predict_multi(start_time=start, end_time=end,fitting_windows=16)
     #dpp.predict_by_time_interval(start_time=start, end_time=end,pred_length=3,add_correction_term=True)
 
 

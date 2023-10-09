@@ -52,8 +52,8 @@ class fusion:
 
         fusion_result = pred_s + self.__correction_term
         #fusion_result = pred_s
-        error_fusion=np.mean(abs(actual_l-fusion_result))/np.mean(actual_l)
-        error_long=np.mean(abs(actual_l-pred_l))/np.mean(actual_l)
+        error_fusion=np.mean(abs(actual_l-fusion_result))
+        error_long=np.mean(abs(actual_l-pred_l))
         self.update_error_price(error_fusion,error_long)
 
         return fusion_result,error_fusion,error_long
@@ -108,16 +108,15 @@ class fusion:
         return fusion_portfolio,fusion_profit,fusion_error,pred_long_error
 
     def update_error_price(self,error_fusion:pandas.DataFrame,error_long):
-        print("asas")
+
         self.__correction_term= (self.__correction_term+error_fusion)/2
-        print("asas")
+
 
     def update_error_portfolio(self,error_fusion:pandas.DataFrame,error_long):
-        print("asas")
+
         error_fusion=error_fusion.drop(columns=["Profit"])
         ef=np.array(error_fusion.values.tolist()[0])
         self.__correction_term= self.__correction_term+ef
-        print("asas")
 
     def loss_profit(self,base_profit,target_profit):
       #  target_profit

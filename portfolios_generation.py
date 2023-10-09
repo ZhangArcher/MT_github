@@ -284,7 +284,7 @@ class Portfolios:
         my_keys = my_stock_dict.keys
 
 
-    def generate_historical_price(self,start:datetime.datetime,end:datetime.datetime):
+    def load_historical_price(self,start:datetime.datetime,end:datetime.datetime):
         """
         get the historical prices table  according time_interval
         This historical prices table is about all stocks
@@ -477,7 +477,7 @@ if __name__ == '__main__':
     end=util.convert_time_into_datetime(end_time)
 
 
-    ppp.generate_historical_price(start=start,end=end)
+    ppp.load_historical_price(start=start,end=end)
     historical_return=ppp.generate_historical_returns()
     portfolio= ppp.generate_historical_portfolios(start=start,end=end,forward_length=10)
     profit = ppp.compute_portfolios_profit()

@@ -14,7 +14,7 @@ import os
 """
 
 
-def download_data(stock_id_list:list[str], interval:str,start:str,end:str,
+def download_data(stock_id_list:list, interval:str,start:str,end:str,
                      target_diretory:str ,auto_adjust:bool,back_adjust=bool):
     """
      download the stock price data using yfinance according stock id ,time interval ,time range
@@ -44,14 +44,14 @@ def download_data(stock_id_list:list[str], interval:str,start:str,end:str,
         #get stock prices
         history = Ticker(stock_id).history(interval=interval,
                                         start=start,end=end,
-                                        auto_adjust=False,back_adjust=False)
+                                        auto_adjust=auto_adjust,back_adjust=back_adjust)
 
 #       #set the file name
         file_name=stock_id+".csv"
         #save the data in the target folder
         history.to_csv(os.path.join(target_diretory,file_name))
 
-def get_stock_id_from_excel(file_dir:str) ->list[str]:
+def get_stock_id_from_excel(file_dir:str):
     """
       collect the stock id from excel and return a id list
 
