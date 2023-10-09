@@ -1,0 +1,187 @@
+<mxfile host="app.diagrams.net" modified="2023-10-09T17:42:52.761Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="XjghSTCr5AybLxeSflSt" version="22.0.4" type="device">
+  <diagram name="第 1 页" id="XX6McKslfLjk_ETUPM0j">
+    <mxGraphModel dx="724" dy="1548" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="326" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-1" value="portfolios_generation.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry y="150" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="290" as="sourcePoint" />
+            <mxPoint x="70" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-3" value="stock price data (csv file)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="270" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-4" value="generate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="123" y="120" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-5" value="data_handler_price.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="186" y="267.5" width="134" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-6" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-5" target="DR6t6V0_Yxzu8b3wPY7b-3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110.00000000000004" y="323.03999999999996" as="sourcePoint" />
+            <mxPoint x="181.04" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-7" value="load" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="60" y="210" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-8" value="gp_wrapper_prices.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="390" y="267.5" width="134" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-12" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-8" target="DR6t6V0_Yxzu8b3wPY7b-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="476" y="340" as="sourcePoint" />
+            <mxPoint x="400" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-14" value="fusion_wrapper_price.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="624" y="267.5" width="160" height="32.5" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-15" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-14" target="DR6t6V0_Yxzu8b3wPY7b-8" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="360" as="sourcePoint" />
+            <mxPoint x="610" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-16" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-14" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="674" y="260" as="sourcePoint" />
+            <mxPoint x="704" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-18" value="The predicted price" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="652" y="170" width="128" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-19" value="predict" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="620" y="223.75" width="128" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-20" value="get data for GP generation by" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="310" y="216.25" width="100" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-21" value="get long-term GP&lt;br&gt;&amp;amp;short-term GP by&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="514" y="223.13" width="110" height="56.25" as="geometry" />
+        </mxCell>
+        <mxCell id="DR6t6V0_Yxzu8b3wPY7b-24" value="load" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="106" y="243.75" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-1" value="the historical portfolios" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="83" y="80" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80.13793103448279" y="45.13793103448279" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-2" value="the historical returns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry y="30" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-4" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.426;entryY=1.125;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-1" target="_eNs-_KFWSIRA7Rh3Kwz-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="30" y="140" as="sourcePoint" />
+            <mxPoint x="80" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-6" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.575;entryY=1.169;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.921;exitY=-0.004;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="DR6t6V0_Yxzu8b3wPY7b-1" target="_eNs-_KFWSIRA7Rh3Kwz-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="121.75" y="150" as="sourcePoint" />
+            <mxPoint x="124.25" y="104" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-7" value="generate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="26" y="110" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-8" value="data_handler_portfolio.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="25" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-9" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-8" target="_eNs-_KFWSIRA7Rh3Kwz-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="216" y="51.25" as="sourcePoint" />
+            <mxPoint x="76" y="48.75" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="_eNs-_KFWSIRA7Rh3Kwz-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="95" as="sourcePoint" />
+            <mxPoint x="300" y="90" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="280" y="70" />
+              <mxPoint x="280" y="95" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-12" value="load" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="65" width="77" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-13" value="load" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="140" y="20" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-14" value="gp_wrapper_portfolio.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="25" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-15" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-14" target="_eNs-_KFWSIRA7Rh3Kwz-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="120" as="sourcePoint" />
+            <mxPoint x="380" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-16" value="get data for GP generation by" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="360" width="100" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-17" value="fusion_wrapper_portfolio.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="706" y="20" width="160" height="47.5" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-18" value="" style="endArrow=classic;html=1;rounded=0;entryX=1.021;entryY=0.638;entryDx=0;entryDy=0;exitX=-0.012;exitY=0.638;exitDx=0;exitDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-17" target="_eNs-_KFWSIRA7Rh3Kwz-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="724" y="134.5" as="sourcePoint" />
+            <mxPoint x="624" y="135.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-19" value="get long-term GP&lt;br&gt;&amp;amp;short-term GP by&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="590" y="-6.25" width="110" height="56.25" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-20" value="predict" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="738" y="-20" width="128" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="770" y="25" as="sourcePoint" />
+            <mxPoint x="770" y="-33" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-22" value="The predicted portfolio &amp;amp; the corresponding profits" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="692" y="-70" width="148" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-23" value="data_collect.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="26" y="380" width="134" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-24" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.397;exitY=-0.033;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.589;entryY=1.092;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-23" target="DR6t6V0_Yxzu8b3wPY7b-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="125" y="360" as="sourcePoint" />
+            <mxPoint x="70" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-25" value="generate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="330" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-27" value="yahoo finance" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="43" y="460" width="107" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-28" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.431;exitY=0.946;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.381;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="_eNs-_KFWSIRA7Rh3Kwz-23" target="_eNs-_KFWSIRA7Rh3Kwz-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="192" y="466" as="sourcePoint" />
+            <mxPoint x="190" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_eNs-_KFWSIRA7Rh3Kwz-29" value="download from" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="430" width="80" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
