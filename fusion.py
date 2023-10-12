@@ -1,6 +1,6 @@
 import numpy as np
 import pandas
-
+from sklearn.linear_model import LinearRegression
 import util
 
 
@@ -16,11 +16,24 @@ class fusion:
      -------
 
      """
+    __correction_term = None
+    __X=None
+    __y=None
     __correction_term=None
+    __mapping=None
     def __init__(self):
         self.__correction_term=None
+        self.__X=[]
+        self.__y=[]
+        self.__mapping=LinearRegression()
 
     def fusion_price_long_term(self,pred_l,pred_s,actual_l):
+
+        #return self.fusion_price_correction(pred_l=pred_l,pred_s=pred_s,actual_l=actual_l)
+
+        return self.fusion_price_linear(pred_l=pred_l, pred_s=pred_s, actual_l=actual_l)
+
+    def fusion_price_correction(self, pred_l, pred_s, actual_l):
         """
            it is going to predict the next long-term price using fusion algorithm
 
@@ -43,24 +56,24 @@ class fusion:
              the difference between the predicted long-term price and the actual price
 
         """
-        if(self.__correction_term is None):
-            if(len(pred_s.shape)>1):
-                self.__correction_term=np.zeros(pred_s.shape[1])
+        if (self.__correction_term is None):
+            if (len(pred_s.shape) > 1):
+                self.__correction_term = np.zeros(pred_s.shape[1])
             else:
                 self.__correction_term = np.zeros(pred_s.shape[0])
-            #self.__correction_term = ((pred_s))*0
+            # self.__correction_term = ((pred_s))*0
 
         fusion_result = pred_s + self.__correction_term
-        #fusion_result = pred_s
-        error_fusion=np.mean(abs(actual_l-fusion_result))
-        error_long=np.mean(abs(actual_l-pred_l))
-        self.update_error_price(error_fusion,error_long)
+        # fusion_result = pred_s
+        error_fusion = np.mean(abs(actual_l - fusion_result))
+        error_long = np.mean(abs(actual_l - pred_l))
+        self.update_error_price(error_fusion, error_long)
 
-        return fusion_result,error_fusion,error_long
+        return fusion_result, error_fusion, error_long
 
-    def fusion_portfolio_long_term(self,pred_l,pred_s,actual_l,return_l):
+    def fusion_price_linear(self, pred_l, pred_s, actual_l):
         """
-           it is going to predict the next long-term portfolio using fusion algorithm
+           it is going to predict the next long-term price using fusion algorithm
 
         :arg
         -------
@@ -81,35 +94,124 @@ class fusion:
              the difference between the predicted long-term price and the actual price
 
         """
+        if(len(self.__X)>2):
+            fusion_result=self.__mapping.predict([[pred_l[0,0],pred_s[0,0]]])
+        else:
+            fusion_result=pred_s
+        error_fusion = np.mean(abs(actual_l - fusion_result))
+        error_long = np.mean(abs(actual_l - pred_l))
+       # self.update_error_price(error_fusion, error_long)
+        error_short= np.mean(abs(actual_l - pred_s))
+        self.__X.append([pred_l[0,0],pred_s[0,0]])
+        self.__y.append(actual_l[0])
+        self.__mapping.fit(self.__X, self.__y)
+
+        return fusion_result, error_fusion, error_long,error_short
+
+    def fusion_portfolio_long_term(self,pred_l,pred_s,actual_l,return_l):
+
+        return self.fusion_portfolio_correction(pred_l=pred_l,pred_s=pred_s,
+                                                actual_l=actual_l,return_l=return_l)
 
 
 
-        if(self.__correction_term is None):
-            self.__correction_term=np.zeros(pred_s.shape[1])
-            #self.__correction_term = ((pred_s))*0
+    def fusion_portfolio_correction(self,pred_l,pred_s,actual_l,return_l):
+        """
+                  it is going to predict the next long-term portfolio using fusion algorithm
 
-        #fusion_portfolio = pred_s + self.__correction_term
+               :arg
+               -------
+                    pred_l: np.array 1D
+                       The predicted  long-term price
+                    actual_l:
+                       The actual long-term price
+                    pred_s: np.array 1D
+                        The predicted  short-term price
+
+              :return
+               -------
+               fusion_result:float
+                    the fusion long-term price
+               error_fusion:float
+                    the difference between the fusion  price and the actual price
+               error_long:float
+                    the difference between the predicted long-term price and the actual price
+
+               """
+
+        if (self.__correction_term is None):
+            self.__correction_term = np.zeros(pred_s.shape[1])
+            # self.__correction_term = ((pred_s))*0
+
+        # fusion_portfolio = pred_s + self.__correction_term
         fusion_portfolio = pred_s
         # reset time index for fusion_portfolio
         fusion_portfolio = self.reset_time_index(base_portfolio=pred_l, target_portfolio=fusion_portfolio)
-
 
         fusion_profit = util.compute_profit(portfolios=fusion_portfolio, returns=return_l)
 
         actual_long_term_profit = util.compute_profit(portfolios=actual_l, returns=return_l)
         pred_long_term_profit = util.compute_profit(portfolios=pred_l, returns=return_l)
 
+        fusion_error = self.loss_profit(base_profit=actual_long_term_profit, target_profit=fusion_profit)
+        pred_long_error = self.loss_profit(base_profit=actual_long_term_profit, target_profit=pred_long_term_profit)
 
-        fusion_error=self.loss_profit(base_profit=actual_long_term_profit,target_profit=fusion_profit)
-        pred_long_error=self.loss_profit(base_profit=actual_long_term_profit,target_profit=pred_long_term_profit)
+        self.update_error_portfolio(error_fusion=fusion_error, error_long=pred_long_error)
+        return fusion_portfolio, fusion_profit, fusion_error, pred_long_error
 
-        self.update_error_portfolio(error_fusion=fusion_error,error_long=pred_long_error)
 
-        return fusion_portfolio,fusion_profit,fusion_error,pred_long_error
+    def fusion_portfolio_linear(self,pred_l,pred_s,actual_l,return_l):
+        """
+            it is going to predict the next long-term portfolio using fusion algorithm.
+            Fusion algorithm is based on a Linear Regression.
+
+         :arg
+         -------
+              pred_l: np.array 1D
+                 The predicted  long-term price
+              actual_l:
+                 The actual long-term price
+              pred_s: np.array 1D
+                  The predicted  short-term price
+
+        :return
+         -------
+         fusion_result:float
+              the fusion long-term price
+         error_fusion:float
+              the difference between the fusion  price and the actual price
+         error_long:float
+              the difference between the predicted long-term price and the actual price
+
+         """
+
+
+        # fusion_portfolio = pred_s + self.__correction_term
+        fusion_portfolio = pred_s
+        # reset time index for fusion_portfolio
+        fusion_portfolio = self.reset_time_index(base_portfolio=pred_l, target_portfolio=fusion_portfolio)
+
+        fusion_profit = util.compute_profit(portfolios=fusion_portfolio, returns=return_l)
+
+        actual_long_term_profit = util.compute_profit(portfolios=actual_l, returns=return_l)
+        pred_long_term_profit = util.compute_profit(portfolios=pred_l, returns=return_l)
+
+        fusion_error = self.loss_profit(base_profit=actual_long_term_profit, target_profit=fusion_profit)
+        pred_long_error = self.loss_profit(base_profit=actual_long_term_profit, target_profit=pred_long_term_profit)
+
+        self.update_error_portfolio(error_fusion=fusion_error, error_long=pred_long_error)
+        return fusion_portfolio, fusion_profit, fusion_error, pred_long_error
+
+
 
     def update_error_price(self,error_fusion:pandas.DataFrame,error_long):
 
         self.__correction_term= (self.__correction_term+error_fusion)/2
+
+
+
+
+
 
 
     def update_error_portfolio(self,error_fusion:pandas.DataFrame,error_long):

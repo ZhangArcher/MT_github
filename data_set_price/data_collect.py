@@ -80,7 +80,7 @@ if __name__ == '__main__':
     file_dir="stock_index_list.xls"
     stock_id_list=get_stock_id_from_excel(file_dir)
     #print(stock_id_list)
-    download_data(stock_id_list,interval="1mo",start="1999-01-01",
+    download_data(stock_id_list,interval="1d",start="1999-01-01",
                   end="2020-01-01",
-                  target_diretory="long_1mo_with_back_ADJ",
+                  target_diretory="short",
                   back_adjust=True,auto_adjust=True)

@@ -2,7 +2,7 @@ import numpy
 import pandas
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
-
+import gpflow
 
 
 class GaussianProcess:
@@ -18,24 +18,22 @@ class GaussianProcess:
 
     def __init__(self):
         #kernel =  3*RBF(length_scale=1)\
-        kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
-        noise_std = 0.9
-        #self.__time_type=self.__company_data.get_time_type()
-        #self.__alpha = 1e-10
-        self.__iterations = 15
-        self.__kernels = kernel
+
       #  self.__gp = GaussianProcessRegressor(kernel=self.__kernels, alpha=self.__alpha,n_restarts_optimizer=self.__iterations,normalize_y=True,random_state=0)
-        self.__gp = GaussianProcessRegressor(kernel=self.__kernels,alpha=noise_std**2,n_restarts_optimizer=self.__iterations, normalize_y=True, random_state=0)
+        self.__gp =None
 
     def fit(self,X_array,Y_array):
        # Y=self.normalize_data(Y_array)
-        self.__gp=self.__gp.fit(X_array, Y_array)
+
+        self.__gp=gpflow.models.VGP( (X_array, Y_array),  kernel=gpflow.kernels.SquaredExponential(),
+    likelihood=gpflow.likelihoods.StudentT(),)
        # self.__kernels.append(self.__gp.kernel_)
-        self.__gp.score(X_array, Y_array)
+        opt = gpflow.optimizers.Scipy()
+
+        opt.minimize(self.__gp.training_loss, self.__gp.trainable_variables)
 
     def predict(self,X_pred_array):
-        Y_mean, Y_cov = self.__gp.predict(X_pred_array, return_cov=True)
-
+        Y_mean, Y_cov = self.__gp.predict_y(X_pred_array, full_cov=False)
         #Y=self.rev_normalize_data(Y_mean)
         return Y_mean,Y_cov
 
@@ -53,8 +51,8 @@ class GaussianProcess:
         return self.__kernels
 
     def initial_GP(self):
-        self.__gp = GaussianProcessRegressor(kernel=self.__kernels[0], alpha=self.__alpha,
-                                             n_restarts_optimizer=self.__iterations, normalize_y=False)
+        self.__gp = gpflow.models.VGP((X_array, Y_array), kernel=gpflow.kernels.SquaredExponential(),
+                                      likelihood=gpflow.likelihoods.StudentT(), )
 
     def normalize_data(self,data):
         self.__max_value = numpy.max(data)

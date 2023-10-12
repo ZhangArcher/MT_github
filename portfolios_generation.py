@@ -6,6 +6,9 @@ import pypfopt.expected_returns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
+from pypfopt import EfficientFrontier
+from pypfopt.risk_models import sample_cov
+
 from data_handler_price import data_handler_price
 import gp_wrapper_prices
 import pandas as pd
@@ -224,17 +227,57 @@ class Portfolios:
 
         ef=pypfopt.efficient_frontier.EfficientSemivariance(returns=stock_returns,expected_returns=mu)
 
+
+        print("mu",mu)
+        print("S", S)
+        print("stock_returns",stock_returns)
+
+        ef.add_objective(pypfopt.objective_functions.L2_reg, gamma=0.1)
+       # ef.add_objective(pypfopt.objective_functions.portfolio_variance)
+        weights = ef.efficient_risk(self.__target_semideviation)
+
+        pf=ef.portfolio_performance(verbose=True)
+
+        return weights,pf
+
+    def generate_portfolios2(self,stock_returns:pd.DataFrame,
+                                               start: datetime.datetime, end: datetime.datetime):
+        """
+        generate portfolio from the current stock_returns
+        :arg
+        -------
+            start:datetime
+            end:datetime
+        :return
+        -------
+            weights:dataframe
+                The portfolio
+            pf:dataframe
+                The performance
+        """
+
+        stock_returns=stock_returns[stock_returns.index<=end]
+        stock_returns=stock_returns[stock_returns.index>=start]
+        mu = self.calculate_expected_return(stock_returns,is_last_hiostorical_return=True,is_mean_hiostorical_return=False)
+
+
+        S = pypfopt.risk_models.CovarianceShrinkage(stock_returns,returns_data=True).ledoit_wolf()
+
+
+        ef=pypfopt.efficient_frontier.EfficientSemivariance(returns=stock_returns,expected_returns=mu)
+
+
         print("mu",mu)
         print("S", S)
         print("stock_returns",stock_returns)
 
         ef.add_objective(pypfopt.objective_functions.L2_reg, gamma=2)
+       # ef.add_objective(pypfopt.objective_functions.portfolio_variance)
         weights = ef.efficient_risk(self.__target_semideviation)
+
         pf=ef.portfolio_performance(verbose=True)
 
         return weights,pf
-
-
 
     def calculate_expected_return(self, stock_returns: pd.DataFrame,is_last_hiostorical_return=True,is_mean_hiostorical_return=False):
         assert (is_last_hiostorical_return & is_mean_hiostorical_return)==False
@@ -467,9 +510,9 @@ class Portfolios:
 
 
 if __name__ == '__main__':
-    path_dataset = "data_set_price/short"
-    start_time = "2013-06-01 00:00:00"
-    end_time = "2018-06-01 00:00:00"
+    path_dataset = "liyao/long"
+    start_time = "2016-06-01 00:00:00"
+    end_time = "2023-08-01 00:00:00"
 
     ppp = Portfolios(path_dataset)
     #ppp.generate_dataframe_by_time_interval_string(start=start_time, end=end_time)
@@ -482,20 +525,20 @@ if __name__ == '__main__':
     portfolio= ppp.generate_historical_portfolios(start=start,end=end,forward_length=10)
     profit = ppp.compute_portfolios_profit()
 
-    name="short"
-
-    file_name_csv = "historical_return_" + name + ".csv"
+    name="long"
+    pre="liyao/"
+    file_name_csv = pre+"historical_return_" + name + ".csv"
     historical_return.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
-    file_name_excel = "historical_return_" + name + ".xlsx"
+    file_name_excel =  pre+"historical_return_" + name + ".xlsx"
     historical_return.to_excel(file_name_excel, sheet_name="Sheet1")
 
 
-    file_name_csv="portfolios_"+name+".csv"
+    file_name_csv= pre+"portfolios_"+name+".csv"
     portfolio.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
-    file_name_excel="portfolios_"+name+".xlsx"
+    file_name_excel= pre+"portfolios_"+name+".xlsx"
     portfolio.to_excel(file_name_excel, sheet_name="Sheet1")
 
-    file_name_csv="profit"+name+".csv"
+    file_name_csv= pre+"profit"+name+".csv"
     profit.to_csv(file_name_csv, date_format='%Y-%m-%d %X')
-    file_name_excel="profit"+name+".xlsx"
+    file_name_excel= pre+"profit"+name+".xlsx"
     profit.to_excel(file_name_excel, sheet_name="Sheet1")

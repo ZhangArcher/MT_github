@@ -9,7 +9,7 @@ import data_handler_price
 import logging
 import datetime
 import util
-import GP
+import gp_wrapper
 
 
 
@@ -52,7 +52,8 @@ class gp_wrapper_price:
     __gp=None
     __eval_score_list=None
     __trading_time=None
-    def __init__(self, csv_file: str):
+    __GP_type=None
+    def __init__(self, csv_file: str,GP_type="GPR"):
         """
         To initialize  class
         to set Gaussian Process Regressor
@@ -65,9 +66,9 @@ class gp_wrapper_price:
               None
         """
 
-
+        self.__GP_type=GP_type
         self.__company_data = data_handler_price.data_handler_price(csv_file)
-        self.__gp=GP.GaussianProcess()
+        self.__gp=gp_wrapper.GaussianProcessWrapper(GP_type=self.__GP_type)
         self.__eval_score_list=[]
 
 
@@ -195,8 +196,9 @@ class gp_wrapper_price:
         for i in range(0,size_of_data):
             data_id = data_id + 1
             close_p=train_price_data.iloc[i]["Close"]
-            X_train.append([1,int(data_id)])
-            Y_train.append(close_p)
+         #   X_train.append([1,int(data_id)])
+            X_train.append([int(data_id)])
+            Y_train.append([close_p])
 
         X_train_array = np.array(X_train)
         Y_train_array = np.array(Y_train)
@@ -219,9 +221,9 @@ class gp_wrapper_price:
 
         for i in range(0, size_of_pred_data):
             close_pred = pred_price_data.iloc[i]["Close"]
-            X_pred.append([1, int(data_id)])
+            X_pred.append([int(data_id)])
             data_id = data_id + 1
-            Y_pred.append(close_pred)
+            Y_pred.append([close_pred])
 
         X_pred_array = np.array(X_pred)
         Y_pred_array = np.array(Y_pred)
@@ -316,7 +318,7 @@ class gp_wrapper_price:
 
             time_index.append(x_pred[0])
             loss_score_list.append(loss_score)
-            mean_list.append(Y_mean)
+            mean_list.append(Y_mean[0])
             var_list.append(Y_cov[0])
             self.update_eval_score(loss_score)
 
@@ -407,17 +409,24 @@ class gp_wrapper_price:
         self.__gp.initial_GP()
 
 if __name__ == '__main__':
-    data_file_month="data_set_price/long_1mo_with_back_ADJ/AAPL.csv"
+    data_file_month="data_set_price/long/AAPL.csv"
 
     start_time = "2008-01-01 00:00:00"
     end_time = "2010-01-01 00:00:00"
     start=util.convert_time_into_datetime(time=start_time)
     end = util.convert_time_into_datetime(time=end_time)
-    dpp=gp_wrapper_price(csv_file=data_file_month)
+    dpp=gp_wrapper_price(csv_file=data_file_month,GP_type="VGP")
     # score_list=[]
     # mean_list=[]
     # var_list=[]
    # df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
 
     X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
-    #df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)
+    df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)
+    print("Y_pred_mean:",Y_pred_mean)
+    print("Y_pred_actual:",Y_pred_actual)
+    print("score:",loss_score)
+
+    print("df_mean:",df_mean)
+    print("df_var:",df_var)
+    print("df_score:",df_score)

@@ -191,11 +191,11 @@ class fusion_wrapper_portfolio:
 
 if __name__ == '__main__':
 
-   portfolio_s = "portfolios_short.csv"
-   return_s = "historical_return_short.csv"
+   portfolio_s = "demo_data/historical_portfolios_short.csv"
+   return_s = "demo_data/historical_return_short.csv"
 
-   portfolio_l= "portfolios_long.csv"
-   return_l = "historical_return_long.csv"
+   portfolio_l= "demo_data/historical_portfolios_long.csv"
+   return_l = "demo_data/historical_return_long.csv"
 
    #data_file_month="data/long_1month/long_1month_term_MSFT.csv"
    start_time="2015-02-01 00:00:00"
@@ -210,7 +210,7 @@ if __name__ == '__main__':
 
    #actual_portfolio_l, fusion_portfolio, actual_profit_l, fusion_profit, fusion_error, pred_long_error=fff.fusion_next_portfolio(start=start_time, end=end_time, excess_time=14)
 
-   df = fff.fusion_next_portfolio_cumulative(start=start_time,predict_begin=predict_begin, end=end_time,excess_time=14)
+   df = fff.fusion_next_portfolio_cumulative(start=start_time,predict_begin=predict_begin, end=end_time,excess_time=0)
 
 
    # file_name_excel = "test_result/Experiment6_portfolio_fusion_result.xlsx"

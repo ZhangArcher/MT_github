@@ -70,9 +70,10 @@ class fusion_wrapper_price:
     __trading_time_long_term = None
     __trading_time_short_term = None
 
+    __GP_type=None
 
 
-    def __init__(self, csv_path_long_term: str,csv_path_short_term: str):
+    def __init__(self, csv_path_long_term: str,csv_path_short_term: str,GP_type="GPR"):
         """
         To initialize  class
         to set Gaussian Process Regressor
@@ -88,8 +89,11 @@ class fusion_wrapper_price:
         """
         self.__company_name = csv_path_long_term.split(".")[0]
 
-        self.__company_wrapper_long_term = gp_wrapper_prices.gp_wrapper_price(csv_path_long_term)
-        self.__company_wrapper_short_term = gp_wrapper_prices.gp_wrapper_price(csv_path_short_term)
+        self.__GP_type=GP_type
+
+        self.__company_wrapper_long_term = gp_wrapper_prices.gp_wrapper_price(csv_path_long_term,GP_type= self.__GP_type)
+        self.__company_wrapper_short_term = gp_wrapper_prices.gp_wrapper_price(csv_path_short_term,GP_type= self.__GP_type)
+
         self.__trading_time_short_term=self.__company_wrapper_short_term.get_trading_time()
         self.__trading_time_long_term = self.__company_wrapper_long_term.get_trading_time()
 
@@ -191,13 +195,13 @@ class fusion_wrapper_price:
             self.gp_predict(start_long_term=start_l, end_long_term=end_l, start_short_term=start_s,
                             end_short_term=end_s)
         # using fusion to fuse long-term and short-term
-        Y_mean_fusion,error_fusion,error_l=self.__fusion.fusion_price_long_term(pred_l=Y_pred_mean_l,
+        Y_mean_fusion,error_fusion,error_l,error_s=self.__fusion.fusion_price_long_term(pred_l=Y_pred_mean_l,
                                                         pred_s=Y_pred_mean_s,actual_l=Y_pred_actual_l)
 
         X_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_l, time_increment=1)
 
 
-        return X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l
+        return X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l,error_s
 
     def fusion_next_price_cumulative(self,start:datetime.datetime,predict_begin:datetime.datetime,end:datetime.datetime, excess_time=0):
         """
@@ -242,14 +246,15 @@ class fusion_wrapper_price:
         #  list for error evaluation
         error_fusion_list=[]
         error_long_term_list=[]
+        error_short_term_list=[]
         time_index=[]
 
         # predict next price cumulatively
         while(end_tmp<end):
-            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l = fff.fusion_next_price(
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = fff.fusion_next_price(
                 start=start_time, end=end_tmp, excess_time=excess_time)
 
-
+            error_short_term_list.append(error_s)
             error_fusion_list.append(error_fusion)
             error_long_term_list.append(error_l)
             time_index.append(X_time)
@@ -261,11 +266,12 @@ class fusion_wrapper_price:
         # evaluate the errors
         df_error_fusion_list=pd.DataFrame(data=error_fusion_list,index=time_index)
         df_error_long_term_list = pd.DataFrame(data=error_long_term_list, index=time_index)
+        df_error_short_term_list = pd.DataFrame(data=error_short_term_list, index=time_index)
         df_error_fusion_list.columns = [excess_time]
         df_error_long_term_list.columns = [excess_time]
 
 
-        return df_error_fusion_list,df_error_long_term_list,time_index
+        return df_error_fusion_list,df_error_long_term_list,df_error_short_term_list,time_index
 
     def fusion_next_price_multi(self,start:datetime.datetime,end:datetime.datetime, excess_time=0,fitting_windows=3):
         """
@@ -310,16 +316,18 @@ class fusion_wrapper_price:
         #  list for error evaluation
         error_fusion_list=[]
         error_long_term_list=[]
+        error_short_term_list=[]
         time_index=[]
 
         # predict next price cumulatively
         while(end_tmp<end):
-            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l = fff.fusion_next_price(
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = fff.fusion_next_price(
                 start=start_time, end=end_tmp, excess_time=excess_time)
 
 
             error_fusion_list.append(error_fusion)
             error_long_term_list.append(error_l)
+            error_short_term_list.append(error_s)
             time_index.append(X_time)
             end_tmp = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_tmp,
                                                                                         time_increment=1)
@@ -330,17 +338,20 @@ class fusion_wrapper_price:
         # evaluate the errors
         df_error_fusion_list=pd.DataFrame(data=error_fusion_list,index=time_index)
         df_error_long_term_list = pd.DataFrame(data=error_long_term_list, index=time_index)
+        df_error_short_term_list = pd.DataFrame(data=error_short_term_list, index=time_index)
         df_error_fusion_list.columns = [excess_time]
         df_error_long_term_list.columns = [excess_time]
+        df_error_short_term_list.columns = [excess_time]
 
-        return df_error_fusion_list,df_error_long_term_list,time_index
+
+        return df_error_fusion_list,df_error_long_term_list,df_error_short_term_list,time_index
 
 
 
 if __name__ == '__main__':
 
-    long_term_data_file = "data_set_price/long_1mo_with_back_ADJ/MSFT.csv"
-    short_term_data_file="data_set_price/short_1day_with_back_ADJ/MSFT.csv"
+    long_term_data_file = "data_set_price/long/MSFT.csv"
+    short_term_data_file="data_set_price/short/MSFT.csv"
     #data_file_month="data/long_1month/long_1month_term_MSFT.csv"
     # start_time="2008-01-01 00:00:00"
     # end_time="2010-01-01 00:00:00"
@@ -361,20 +372,23 @@ if __name__ == '__main__':
     predict_begin = util.convert_time_into_datetime(time=predict_begin)
     end_time = util.convert_time_into_datetime(time=end_time)
 
-    fff = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file)
-    #X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l = fff.fusion_next_price(start=start_time,end=end_time,excess_time=3)
+    fff = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file,GP_type="GPR")
+   #  X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l,error_s = fff.fusion_next_price(start=start_time,end=end_time,excess_time=3)
+   #
+   # # df_error_fusion_list,df_error_long_term_list,time_index= fff.fusion_next_price_cumulative(start=start_time,end=end_time,predict_begin=predict_begin,excess_time=14)
+   #  print("fusion_next_price_cumulative")
+   #  print("df_error_fusion_list: ",np.mean(error_fusion))
+   #  print("df_error_long_term_list: ", np.mean(error_l))
+    excess_time_list=[0]
 
-    df_error_fusion_list,df_error_long_term_list,time_index= fff.fusion_next_price_cumulative(start=start_time,end=end_time,predict_begin=predict_begin,excess_time=14)
-    print("fusion_next_price_cumulative")
-    print("df_error_fusion_list: ",np.mean(df_error_fusion_list))
-    print("df_error_long_term_list: ", np.mean(df_error_long_term_list))
-
-    # fff2 = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file)
-    # df_error_fusion_list2, df_error_long_term_list2, time_index2 = fff2.fusion_next_price_multi(start=start_time,
-    #                                                                                              end=end_time,
-    #                                                                                              fitting_windows=6,
-    #                                                                                              excess_time=18)
-    #
-    # print("fusion_next_price_multi")
-    # print("df_error_fusion_list: ",np.mean(df_error_fusion_list2))
-    # print("df_error_long_term_list: ", np.mean(df_error_long_term_list2))
+    for excess_time in excess_time_list:
+        fff2 = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file,GP_type="GPR")
+        df_error_fusion_list, df_error_long_term_list, df_error_short_term_list, time_index = fff2.fusion_next_price_multi(start=start_time,
+                                                                                                     end=end_time,
+                                                                                                     fitting_windows=6,
+                                                                                                     excess_time=excess_time)
+        print("excess_time:",excess_time)
+        print("fusion_next_price_multi")
+        print("df_error_fusion_list: ",np.mean(df_error_fusion_list))
+        print("df_error_long_term_list: ", np.mean(df_error_long_term_list))
+        print("df_error_short_term_list: ", np.mean(df_error_short_term_list))

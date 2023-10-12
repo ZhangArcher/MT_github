@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
 
-import GP
+import gp_wrapper
 import data_handler_portfolio
 import logging
 import datetime
@@ -48,8 +48,8 @@ class gp_wrapper_portfolio:
     #__gp = None
     __eval_score_list = None
     __trading_time = None
-
-    def __init__(self, data_file_portfolio: str,data_file_return:str):
+    __GP_type=None
+    def __init__(self, data_file_portfolio: str,data_file_return:str,GP_type="GPR"):
         """
           To initialize class and to set Gaussian Process Regressor
           input:
@@ -61,7 +61,7 @@ class gp_wrapper_portfolio:
           output:
               None
           """
-
+        self.__GP_type=GP_type
         self.__portfolios_handler = data_handler_portfolio.data_handler_portfolio(data_file_portfolio)
         self.__trading_time=self.__portfolios_handler.get_trading_time()
         self.__stock_list=self.__portfolios_handler.get_assets_id_list()
@@ -75,7 +75,7 @@ class gp_wrapper_portfolio:
         self.__GPs_dict={}
 
         for ele in self.__stock_list:
-            self.__GPs_dict[ele]= GP.GaussianProcess
+            self.__GPs_dict[ele]= gp_wrapper.GaussianProcessWrapper(GP_type=self.__GP_type)
 
     def get_historical_returns_by_portfolios(self,current_historical_return:pd.DataFrame,portfolios:pd.DataFrame):
 
@@ -157,13 +157,13 @@ class gp_wrapper_portfolio:
             X, Y, X_pred, Y_pred_actual = self.get_historical_positions(id=id,start_time=start_time,
                                             end_time= end_time, pred_start_time=pred_start_time,pred_end_time=pred_end_time)
             assert  len(pred_time_index)==len(X_pred)
-            self.__GPs_dict[id]=GP.GaussianProcess()
+            self.__GPs_dict[id]=gp_wrapper.GaussianProcessWrapper()
             self.__GPs_dict[id].fit(X, Y)
 
             assert len(X_pred) > 0
             Y_pred_mean, Y_cov = (self.__GPs_dict[id]).predict(X_pred)
             assert len(pred_time_index) == len(Y_pred_mean)
-            pred_portfolio_list.append(pd.DataFrame({id:Y_pred_mean},index=pred_time_index))
+            pred_portfolio_list.append(pd.DataFrame({id:Y_pred_mean[0]},index=pred_time_index))
             actual_portfolio_list.append(pd.DataFrame({id: Y_pred_actual}, index=pred_time_index))
 
 
@@ -271,16 +271,18 @@ class gp_wrapper_portfolio:
         his_position_data.sort_values()
         size_of_data = his_position_data.shape[0]
         data_id = 1
-        Y=list(his_position_data)
-        for i in range(0, size_of_data):
-            X.append([1, int(data_id)])
-            data_id=data_id+1
+        train_position=list(his_position_data)
 
+        for i in range(0, size_of_data):
+            X.append([int(data_id)])
+            data_id=data_id+1
+            Y.append([train_position[i]])
         X = np.array(X)
         Y = np.array(Y)
 
         assert pred_start_time <= pred_end_time
         X_pred = []
+        Y_pred=[]
         # data_id=0
 
         target_position_data = self.__portfolios_handler.get_historical_position_by_id_time(id=id, start=pred_start_time,end=pred_end_time)
@@ -290,13 +292,15 @@ class gp_wrapper_portfolio:
         size_of_pred_data = target_position_data.shape[0]
 
         for i in range(0, size_of_pred_data):
-            X_pred.append([1, int(data_id)])
+            X_pred.append([int(data_id)])
+            Y_pred.append(Y_pred_actual[i])
             data_id = data_id + 1
 
         X_pred = np.array(X_pred)
-        Y_pred_actual = np.array(Y_pred_actual)
-
-        return X, Y, X_pred, Y_pred_actual
+        #Y_pred_actual = np.array(Y_pred_actual)
+        Y_pred = np.array(Y_pred)
+       # return X, Y, X_pred, Y_pred_actual
+        return X, Y, X_pred, Y_pred
 
 
     def get_trading_time(self):
@@ -396,9 +400,12 @@ if __name__ == '__main__':
     start=util.convert_time_into_datetime(time=start_time)
     end = util.convert_time_into_datetime(time=end_time)
 
-    dpp = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return)
-    target_portfolio,target_profit,pred_portfolio,pred_profit,loss_score=dpp.predict(start_time=start,end_time=end, pred_length=1,with_loss=True)
-    #df_mean, df_score = dpp.predict_multi(start_time=start, end_time=end,fitting_windows=16)
+    dpp = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="GPR")
+    actual_portfolio,actual_profit,pred_portfolio,pred_profit,loss_score=dpp.predict(start_time=start,end_time=end, pred_length=1,with_loss=True)
+
+    dpp2 = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="VGP")
+    df_mean, df_score = dpp2.predict_multi(start_time=start, end_time=end,fitting_windows=16)
+    print("sdsds")
     #dpp.predict_by_time_interval(start_time=start, end_time=end,pred_length=3,add_correction_term=True)
 
 

@@ -1,55 +1,33 @@
-# MT_github
-![Image text](https://github.com/ZhangArcher/MT_github/blob/master/Process.png)
-
-
-
 
 To do list(done):
-
 0.data collection
 
 1.stock price data handler,which can load stock price
-
 2.simple Gaussian process fitting of stock prices based on different time scale
-
 3.simple Gaussian process fusion for stock prices bewteen long term and short term
-
 4.portfolios generation(portfolio data set generation)  based on standard / customized expected return ,risk model and objected function.
-
 5.simple Gaussian Proccess fitting of single asset allocation based on the monthly prices. (just use simple kernel)
-
 6.Simple Gaussian Proccess fusion of single asset allocation between longterm and short term
 
 to do list(unfinish ,):
-
 7. utilize the relationship among multi-Gaussian Process output (still being in test)
-
-
 8. Using Gaussian Process fusion from MuDaFuGP.
-
 
 
 
 details:
 
-0.data collection:
+0.data collection
+    to collect sotck prices data ,using package yfinance , according to different time scale , for example : daily prices, monthly prices , yearly prices
 
-
-to collect sotck prices data ,using package yfinance , according to different time scale , for example : daily prices, monthly prices , yearly prices
-
-
-1.stock price data handler:
-
-
-data_handler_price can load stock price and can return a dataframe of stock price based on a speical time interval and a customerzied timescale.
-
+1.stock price data handler
+    data_handler_price can load stock price and can return a dataframe of stock price based on a speical time interval and a customerzied timescale.
 
 
 2.Simple Gaussian process fitting of stock prices based on different time scale with different fitting_length and pred_length
-
- data_wrapper_price_gp can load stock prices by data_handler.
- Using these stock prices , data_wrapper_gp can fit a Gaussian Process GP.
- Using GP , data_wrapper_gp can predict the future price.
+    data_wrapper_price_gp can load stock prices by data_handler.
+    Using these stock prices , data_wrapper_gp can fit a Gaussian Process GP.
+    Using GP , data_wrapper_gp can predict the future price.
 
     Term:
         fitting_length: the data size used to fit a Gaussian Process
