@@ -107,11 +107,9 @@ class fusion_wrapper_price:
 
 
 
-    def gp_predict(self,start_long_term:datetime.datetime,end_long_term:datetime.datetime,
-                   start_short_term:datetime.datetime,end_short_term:datetime.datetime):
+    def gp_predict_long_term(self,start_long_term:datetime.datetime,end_long_term:datetime.datetime):
         """
         To predict the long-term price with long-term data ,
-        short-term price with short-term data  .
         And it returns the results and the errors.
         
         :arg
@@ -119,10 +117,7 @@ class fusion_wrapper_price:
             start_long_term:datetime.datetime
                 
             end_long_term:datetime.datetime
-            
-            start_short_term:datetime.datetime
-            
-            end_short_term:datetime.datetime
+
             
        :return
         -------
@@ -132,6 +127,27 @@ class fusion_wrapper_price:
                 The actual long-term price
              loss_score_l: np.array 1D
                 The loss  from the difference between  the predicted  long-term price  and the actual long-term price
+
+        """
+
+        X_pred_times_l,Y_pred_mean_l,Y_pred_cov_l,Y_trad_l,Y_pred_actual_l,loss_score_pred_l,loss_score_trad_l = self.__company_wrapper_long_term.predict(
+            start_time=start_long_term, end_time=end_long_term, pred_length=1)
+
+        return Y_pred_mean_l,Y_pred_actual_l,loss_score_pred_l,loss_score_trad_l
+
+    def gp_predict_short_term(self,  start_short_term: datetime.datetime, end_short_term: datetime.datetime):
+        """
+        To predict short-term price with short-term data  .
+        And it returns the results and the errors.
+
+        :arg
+        -------
+            start_short_term:datetime.datetime
+
+            end_short_term:datetime.datetime
+
+       :return
+        -------
              Y_pred_mean_s: np.array 1D
                  The predicted  short-term price
              Y_pred_actual_s:np.array 1D
@@ -141,12 +157,46 @@ class fusion_wrapper_price:
 
         """
 
-        X_pred_times_l,Y_pred_mean_l,Y_pred_cov_l,Y_pred_actual_l,loss_score_l = self.__company_wrapper_long_term.predict(
-            start_time=start_long_term, end_time=end_long_term, pred_length=1)
-        X_pred_times_s,Y_pred_mean_s,Y_pred_cov_s,Y_pred_actual_s,loss_score_s = self.__company_wrapper_short_term.predict(
+        X_pred_times_s, Y_pred_mean_s, Y_pred_cov_s,Y_trad_s, Y_pred_actual_s, loss_score_pred_s,loss_score_trad_s = self.__company_wrapper_short_term.predict(
             start_time=start_short_term, end_time=end_short_term, pred_length=1)
 
-        return Y_pred_mean_l,Y_pred_actual_l,loss_score_l,Y_pred_mean_s,Y_pred_actual_s,loss_score_s
+        return  Y_pred_mean_s, Y_pred_actual_s,loss_score_pred_s,loss_score_trad_s
+
+
+    def get_short_term_data(self, start_short_term: datetime.datetime, end_short_term: datetime.datetime,excess_time:int):
+        Y_pred_mean_s_list=[]
+        Y_pred_actual_s_list=[]
+        loss_score_pred_s_list=[]
+        loss_score_trad_s_list=[]
+        for i in range(0,excess_time):
+            end_short_term = self.__company_wrapper_short_term.find_matched_time_with_increment(begin_time=end_short_term,
+                                                                                       time_increment=1)
+            Y_pred_mean_s, Y_pred_actual_s,loss_score_pred_s,loss_score_trad_s=self.gp_predict_short_term(start_short_term=start_short_term, end_short_term=end_short_term)
+            Y_pred_mean_s_list.append(Y_pred_mean_s[0][0])
+            Y_pred_actual_s_list.append(Y_pred_actual_s[0][0])
+            loss_score_pred_s_list.append(loss_score_pred_s)
+            loss_score_trad_s_list.append(loss_score_trad_s)
+
+        Y_pred_mean_s_list=np.array(Y_pred_mean_s_list)
+        Y_pred_actual_s_list=np.array(Y_pred_actual_s_list)
+        return Y_pred_mean_s_list,Y_pred_actual_s_list,loss_score_pred_s_list,loss_score_trad_s_list
+
+
+
+    def get_short_term_data_single_short_term(self, start_short_term: datetime.datetime, end_short_term: datetime.datetime,excess_time:int):
+
+        end_short_term = self.__company_wrapper_short_term.find_matched_time_with_increment(begin_time=end_short_term,
+                                                                                       time_increment=excess_time)
+        Y_pred_mean_s, Y_pred_actual_s,loss_score_pred_s,loss_score_trad_s=self.gp_predict_short_term(start_short_term=start_short_term, end_short_term=end_short_term)
+
+        return Y_pred_mean_s[0], Y_pred_actual_s[0], loss_score_pred_s, loss_score_trad_s
+
+
+    def get_long_term_data(self, start_long_term: datetime.datetime, end_long_term: datetime.datetime):
+        Y_pred_mean_l, Y_pred_actual_l, loss_score_pred_l, loss_score_trad_l=self.gp_predict_long_term(start_long_term=start_long_term, end_long_term=end_long_term)
+        return Y_pred_mean_l[0], Y_pred_actual_l[0], loss_score_pred_l, loss_score_trad_l
+
+
 
 
     def fusion_next_price(self, start: datetime.datetime, end: datetime.datetime, excess_time=0):
@@ -187,21 +237,143 @@ class fusion_wrapper_price:
         start_l = start
         start_s = start
         end_l = end
-        end_s = self.__company_wrapper_short_term.find_matched_time_with_increment(begin_time=end,
-                                                                                       time_increment=excess_time)
+        end_s = end
 
 
-        Y_pred_mean_l, Y_pred_actual_l, loss_score_l, Y_pred_mean_s, Y_pred_actual_s, loss_score_s = \
-            self.gp_predict(start_long_term=start_l, end_long_term=end_l, start_short_term=start_s,
-                            end_short_term=end_s)
+
+
+        Y_pred_mean_l, Y_pred_actual_l, loss_score_pred_l, loss_score_trad_l = \
+            self.get_long_term_data(start_long_term=start_l, end_long_term=end_l)
+
+        Y_pred_mean_s_list,Y_pred_actual_s_list,loss_score_pred_s_list,loss_score_trad_s_list= \
+            self.get_short_term_data(start_short_term=start_l, end_short_term=end_l,excess_time=excess_time)
+
         # using fusion to fuse long-term and short-term
+
         Y_mean_fusion,error_fusion,error_l,error_s=self.__fusion.fusion_price_long_term(pred_l=Y_pred_mean_l,
-                                                        pred_s=Y_pred_mean_s,actual_l=Y_pred_actual_l)
+                                                        pred_s_list=Y_pred_mean_s_list,actual_l=Y_pred_actual_l)
+
 
         X_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_l, time_increment=1)
 
 
         return X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l,error_s
+
+
+
+    def fusion_next_price_single_short_term_data(self, start: datetime.datetime, end: datetime.datetime, excess_time=0):
+        """
+            it is going to predict the  long-term price at time point (long_term_end+1) using long-term GP, short-term GP and  fusion algorithm.
+
+            important:
+             (long_term_end+1) is based on long-term unit time.
+            (short_term_end+1) is based on short-term unit time.
+            hence , (short_term_end+1) != (long_term_end+1)
+
+            long_term_end=end
+            long_term_start=start
+            short_term_end=end
+            short_term_start=start
+            long-term GP is generated from the data set between [long_term_start,long_term_end].
+            short-term GP is generated from the data set between [short_term_start,short_term_end+excess_time].
+
+         :arg
+         -------
+                start:datetime.datetime
+
+                end:datetime.datetime
+        :return
+         -------
+                 Y_mean_fusion:float
+                     the fusion long-term price
+                 Y_pred_mean_l:float
+                     the predicted long-term price
+                 Y_pred_actual_l: float
+                     the actual long-term price
+                 error_fusion:float
+                     the difference between the fusion  price and the actual price
+                 error_long_term:float
+                     the difference between the predicted long-term price and the actual price
+
+         """
+        start_l = start
+        start_s = start
+        end_l = end
+        end_s = end
+
+        Y_pred_mean_l, Y_pred_actual_l, loss_score_pred_l, loss_score_trad_l = \
+            self.get_long_term_data(start_long_term=start_l, end_long_term=end_l)
+
+        Y_pred_mean_s_list, Y_pred_actual_s_list, loss_score_pred_s_list, loss_score_trad_s_list = \
+            self.get_short_term_data_single_short_term(start_short_term=start_l, end_short_term=end_l, excess_time=excess_time)
+
+        # using fusion to fuse long-term and short-term
+
+        Y_mean_fusion, error_fusion, error_l, error_s = self.__fusion.fusion_price_long_term(pred_l=Y_pred_mean_l,
+                                                                                             pred_s_list=Y_pred_mean_s_list,
+                                                                                             actual_l=Y_pred_actual_l)
+
+        X_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_l, time_increment=1)
+
+        return X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l, error_s
+
+    def fusion_single_trad(self, start: datetime.datetime, end: datetime.datetime, excess_time=0):
+        """
+            it is going to predict the  long-term price at time point (long_term_end+1) using long-term GP, short-term GP and  fusion algorithm.
+
+            important:
+             (long_term_end+1) is based on long-term unit time.
+            (short_term_end+1) is based on short-term unit time.
+            hence , (short_term_end+1) != (long_term_end+1)
+
+            long_term_end=end
+            long_term_start=start
+            short_term_end=end
+            short_term_start=start
+            long-term GP is generated from the data set between [long_term_start,long_term_end].
+            short-term GP is generated from the data set between [short_term_start,short_term_end+excess_time].
+
+         :arg
+         -------
+                start:datetime.datetime
+
+                end:datetime.datetime
+        :return
+         -------
+                 Y_mean_fusion:float
+                     the fusion long-term price
+                 Y_pred_mean_l:float
+                     the predicted long-term price
+                 Y_pred_actual_l: float
+                     the actual long-term price
+                 error_fusion:float
+                     the difference between the fusion  price and the actual price
+                 error_long_term:float
+                     the difference between the predicted long-term price and the actual price
+
+         """
+        start_l = start
+        start_s = start
+        end_l = end
+        end_s = end
+
+        Y_pred_mean_l, Y_pred_actual_l, loss_score_pred_l, loss_score_trad_l = \
+            self.get_long_term_data(start_long_term=start_l, end_long_term=end_l)
+
+        Y_pred_mean_s_list, Y_pred_actual_s_list, loss_score_pred_s_list, loss_score_trad_s_list = \
+            self.get_short_term_data_single_short_term(start_short_term=start_l, end_short_term=end_l, excess_time=excess_time)
+
+        # using fusion to fuse long-term and short-term
+
+        Y_mean_fusion, error_fusion, error_l, error_s = self.__fusion.fusion_price_long_term_trad(pred_l=Y_pred_mean_l,
+                                                                                             pred_s_list=Y_pred_mean_s_list,
+                                                                                             actual_l=Y_pred_actual_l)
+
+        X_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_l, time_increment=1)
+
+        return X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l, error_s
+
+
 
     def fusion_next_price_cumulative(self,start:datetime.datetime,predict_begin:datetime.datetime,end:datetime.datetime, excess_time=0):
         """
@@ -251,7 +423,7 @@ class fusion_wrapper_price:
 
         # predict next price cumulatively
         while(end_tmp<end):
-            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = fff.fusion_next_price(
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = self.fusion_next_price(
                 start=start_time, end=end_tmp, excess_time=excess_time)
 
             error_short_term_list.append(error_s)
@@ -321,7 +493,7 @@ class fusion_wrapper_price:
 
         # predict next price cumulatively
         while(end_tmp<end):
-            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = fff.fusion_next_price(
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l,error_s = self.fusion_next_price(
                 start=start_time, end=end_tmp, excess_time=excess_time)
 
 
@@ -346,6 +518,152 @@ class fusion_wrapper_price:
 
         return df_error_fusion_list,df_error_long_term_list,df_error_short_term_list,time_index
 
+    def multi_fusion_next_price_single_short_term_data(self, start: datetime.datetime, end: datetime.datetime, excess_time=0,
+                                fitting_windows=3):
+        """
+           it is going to predict the  long-term price at time point cumulatively using long-term GP, short-term GP and  fusion algorithm.
+
+           important:
+            (long_term_end+1) is based on long-term unit time.
+           (short_term_end+1) is based on short-term unit time.
+           hence , (short_term_end+1) != (long_term_end+1)
+
+           long_term_end=end
+           long_term_start=start
+           short_term_end=end
+           short_term_start=start
+           long-term GP is generated from the data set between [long_term_start,long_term_end].
+           short-term GP is generated from the data set between [short_term_start,short_term_end+excess_time].
+
+        :arg
+        -------
+               start:datetime.datetime
+               predict_begin:datetime.datetime
+               end:datetime.datetime
+       :return
+        -------
+                Y_mean_fusion:float
+                    the fusion long-term price
+                Y_pred_mean_l:float
+                    the predicted long-term price
+                Y_pred_actual_l: float
+                    the actual long-term price
+                error_fusion:float
+                    the difference between the fusion  price and the actual price
+                error_long_term:float
+                    the difference between the predicted long-term price and the actual price
+
+        """
+
+        # initial the start time
+        start_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start,
+                                                                                       time_increment=1)
+        end_tmp = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start_time,
+                                                                                    time_increment=fitting_windows - 1)
+
+        #  list for error evaluation
+        error_fusion_list = []
+        error_long_term_list = []
+        error_short_term_list = []
+        time_index = []
+
+        # predict next price cumulatively
+        while (end_tmp < end):
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l, error_s = self.fusion_next_price_single_short_term_data(
+                start=start_time, end=end_tmp, excess_time=excess_time)
+
+            error_fusion_list.append(error_fusion)
+            error_long_term_list.append(error_l)
+            error_short_term_list.append(error_s)
+            time_index.append(X_time)
+            end_tmp = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_tmp,
+                                                                                        time_increment=1)
+            start_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start_time,
+                                                                                           time_increment=1)
+
+        # evaluate the errors
+        df_error_fusion_list = pd.DataFrame(data=error_fusion_list, index=time_index)
+        df_error_long_term_list = pd.DataFrame(data=error_long_term_list, index=time_index)
+        df_error_short_term_list = pd.DataFrame(data=error_short_term_list, index=time_index)
+        df_error_fusion_list.columns = [excess_time]
+        df_error_long_term_list.columns = [excess_time]
+        df_error_short_term_list.columns = [excess_time]
+
+        return df_error_fusion_list, df_error_long_term_list, df_error_short_term_list, time_index
+
+    def multi_fusion_single_trad(self, start: datetime.datetime, end: datetime.datetime, excess_time=0,
+                                fitting_windows=3):
+        """
+           it is going to predict the  long-term price at time point cumulatively using long-term GP, short-term GP and  fusion algorithm.
+
+           important:
+            (long_term_end+1) is based on long-term unit time.
+           (short_term_end+1) is based on short-term unit time.
+           hence , (short_term_end+1) != (long_term_end+1)
+
+           long_term_end=end
+           long_term_start=start
+           short_term_end=end
+           short_term_start=start
+           long-term GP is generated from the data set between [long_term_start,long_term_end].
+           short-term GP is generated from the data set between [short_term_start,short_term_end+excess_time].
+
+        :arg
+        -------
+               start:datetime.datetime
+               predict_begin:datetime.datetime
+               end:datetime.datetime
+       :return
+        -------
+                Y_mean_fusion:float
+                    the fusion long-term price
+                Y_pred_mean_l:float
+                    the predicted long-term price
+                Y_pred_actual_l: float
+                    the actual long-term price
+                error_fusion:float
+                    the difference between the fusion  price and the actual price
+                error_long_term:float
+                    the difference between the predicted long-term price and the actual price
+
+        """
+
+        # initial the start time
+        start_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start,
+                                                                                       time_increment=1)
+        end_tmp = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start_time,
+                                                                                    time_increment=fitting_windows - 1)
+
+        #  list for error evaluation
+        error_fusion_list = []
+        error_long_term_list = []
+        error_short_term_list = []
+        time_index = []
+
+        # predict next price cumulatively
+        while (end_tmp < end):
+            X_time, Y_mean_fusion, Y_pred_mean_l, Y_pred_actual_l, error_fusion, error_l, error_s = self.fusion_next_price_single_short_term_data(
+                start=start_time, end=end_tmp, excess_time=excess_time)
+
+            error_fusion_list.append(error_fusion)
+            error_long_term_list.append(error_l)
+            error_short_term_list.append(error_s)
+            time_index.append(X_time)
+            end_tmp = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=end_tmp,
+                                                                                        time_increment=1)
+            start_time = self.__company_wrapper_long_term.find_matched_time_with_increment(begin_time=start_time,
+                                                                                           time_increment=1)
+
+        # evaluate the errors
+        df_error_fusion_list = pd.DataFrame(data=error_fusion_list, index=time_index)
+        df_error_long_term_list = pd.DataFrame(data=error_long_term_list, index=time_index)
+        df_error_short_term_list = pd.DataFrame(data=error_short_term_list, index=time_index)
+        df_error_fusion_list.columns = [excess_time]
+        df_error_long_term_list.columns = [excess_time]
+        df_error_short_term_list.columns = [excess_time]
+
+        return df_error_fusion_list, df_error_long_term_list, df_error_short_term_list, time_index
+
 
 
 if __name__ == '__main__':
@@ -366,29 +684,41 @@ if __name__ == '__main__':
 
     start_time="2007-01-01 00:00:00"
     predict_begin="2008-02-01 00:00:00"
+    #end_time="2014-02-01 00:00:00"\
     end_time="2010-02-01 00:00:00"
 
     start_time = util.convert_time_into_datetime(time=start_time)
     predict_begin = util.convert_time_into_datetime(time=predict_begin)
     end_time = util.convert_time_into_datetime(time=end_time)
 
-    fff = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file,GP_type="GPR")
-   #  X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l,error_s = fff.fusion_next_price(start=start_time,end=end_time,excess_time=3)
+    #fff = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file,GP_type="GPR")
+    #X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l,error_s = fff.fusion_next_price_single_short_term_data(start=start_time,end=end_time,excess_time=5)
    #
-   # # df_error_fusion_list,df_error_long_term_list,time_index= fff.fusion_next_price_cumulative(start=start_time,end=end_time,predict_begin=predict_begin,excess_time=14)
-   #  print("fusion_next_price_cumulative")
+    #df_error_fusion_list,df_error_long_term_list,time_index= fff.fusion_next_price_cumulative(start=start_time,end=end_time,predict_begin=predict_begin,excess_time=5)
+    print("fusion_next_price_cumulative")
    #  print("df_error_fusion_list: ",np.mean(error_fusion))
    #  print("df_error_long_term_list: ", np.mean(error_l))
-    excess_time_list=[0]
-
+    excess_time_list=[1,2]
+    #
     for excess_time in excess_time_list:
         fff2 = fusion_wrapper_price(csv_path_long_term=long_term_data_file, csv_path_short_term=short_term_data_file,GP_type="GPR")
-        df_error_fusion_list, df_error_long_term_list, df_error_short_term_list, time_index = fff2.fusion_next_price_multi(start=start_time,
+        df_error_fusion_list, df_error_long_term_list, df_error_short_term_list, time_index = fff2.multi_fusion_next_price_single_short_term_data(start=start_time,
                                                                                                      end=end_time,
                                                                                                      fitting_windows=6,
                                                                                                      excess_time=excess_time)
         print("excess_time:",excess_time)
-        print("fusion_next_price_multi")
-        print("df_error_fusion_list: ",np.mean(df_error_fusion_list))
-        print("df_error_long_term_list: ", np.mean(df_error_long_term_list))
-        print("df_error_short_term_list: ", np.mean(df_error_short_term_list))
+
+
+        print("df_error_fusion_list: ",(df_error_fusion_list))
+        print("df_error_long_term_list: ",(df_error_long_term_list))
+        print("df_error_short_term_list: ", (df_error_short_term_list))
+
+        fig, ax = plt.subplots()
+
+        ax.plot(df_error_fusion_list.index, df_error_fusion_list.values,label="error of fusion ")
+        ax.plot(df_error_long_term_list.index, df_error_long_term_list.values, label="error of long_term ")
+        ax.plot(df_error_short_term_list.index, df_error_short_term_list.values, label="error of short_term ")
+        plt.yscale("log")
+        ax.legend()
+
+        plt.show()

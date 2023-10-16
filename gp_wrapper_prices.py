@@ -126,11 +126,23 @@ class gp_wrapper_price:
         assert len(X_pred_array)>0
         # predict the result
         Y_pred_mean, Y_pred_cov = self.__gp.predict(X_pred_array)
-        Y_pred_mean=np.array(Y_pred_mean)
-        X_pred_times=np.array(pred_times)
-        loss_score=self.get_loss_function_result(Y_pred_mean,Y_pred_actual)
+       # Y_pred_mean=np.array(Y_pred_mean)
+      #  X_pred_times=np.array(pred_times)
+        X_pred_times=pred_times.tolist()
+        Y_trad=[]
+        if(pred_length==1):
+            Y_trad.append((Y_train_array[-1]).tolist())
+        else:
+            Y_trad.append(Y_train_array[-1].tolist())
+            Y_trad.extend(Y_pred_actual[0:-1].tolist())
 
-        return X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score
+
+
+        loss_score_pred=self.get_loss_function_result(Y_pred_mean,Y_pred_actual)
+        loss_score_trad = self.get_loss_function_result(Y_trad, Y_pred_actual)
+
+        return X_pred_times,Y_pred_mean,Y_pred_cov,Y_trad,Y_pred_actual,loss_score_pred,loss_score_trad
+
 
 
     def get_data_set_size_by_time_interval(self,start_time:datetime.datetime,
@@ -302,7 +314,8 @@ class gp_wrapper_price:
         Y_mean=np.array([])
         Y_cov=np.array([])
         Y = np.array([])
-        loss_score_list=[]
+        loss_score_pred_list=[]
+        loss_score_trad_list = []
         time_index=[]
         mean_list=[]
         var_list=[]
@@ -310,30 +323,35 @@ class gp_wrapper_price:
         #predict next price cumulatively
         while(temp_end_time<=end_time):
 
-            x_pred, Y_mean, Y_cov,Y_actual, loss_score = self.predict(start_time=temp_start_time,
+            x_pred, Y_mean, Y_cov,Y_trad,Y_actual, loss_score_pred, loss_score_trad= self.predict(start_time=temp_start_time,
                                                                       end_time=temp_end_time,pred_length=1)
             if(add_correction_term):
                 # add a correction_term
                 Y_mean=self.add_correction_term(Y_mean)
 
             time_index.append(x_pred[0])
-            loss_score_list.append(loss_score)
+            loss_score_pred_list.append(loss_score_pred)
+            loss_score_trad_list.append(loss_score_trad)
             mean_list.append(Y_mean[0])
             var_list.append(Y_cov[0])
-            self.update_eval_score(loss_score)
+            self.update_eval_score(loss_score_pred)
 
             temp_start_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=1)
             temp_end_time=self.find_matched_time_with_increment(begin_time=temp_end_time,time_increment=1)
 
         #collect the result
-        df_score=pd.DataFrame(data=loss_score_list,index=time_index)
-        df_score.columns=[fitting_windows]
+        loss_score_pred=pd.DataFrame(data=loss_score_pred_list,index=time_index)
+        loss_score_pred.columns=[fitting_windows]
+        loss_score_trad=pd.DataFrame(data=loss_score_trad_list,index=time_index)
+        loss_score_trad.columns=[fitting_windows]
+
         df_mean=pd.DataFrame(data=mean_list,index=time_index)
         df_mean.columns = [fitting_windows]
         df_var=pd.DataFrame(data=var_list,index=time_index)
         df_mean.columns = [fitting_windows]
 
-        return df_mean,df_var,df_score
+
+        return df_mean,df_var,loss_score_pred,loss_score_trad
 
     def get_kernels(self):
         """
@@ -349,7 +367,7 @@ class gp_wrapper_price:
 
         return self.__gp.get_kernels()
 
-    def get_loss_function_result(self,result: np.array,pred_result:np.array):
+    def get_loss_function_result(self,pred: np.array,actual:np.array):
         """
              get the result of loss function according pred_result and result
          :arg
@@ -364,7 +382,7 @@ class gp_wrapper_price:
                 The score form loss function
         """
 
-        score=np.mean((pred_result-result))
+        score=np.mean(abs(pred-actual))
 
 
         return score
@@ -419,14 +437,17 @@ if __name__ == '__main__':
     # score_list=[]
     # mean_list=[]
     # var_list=[]
-   # df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
+    #df_mean,df_var,df_score=dpp.predict_cumulative(start_time=start, end_time=end,fitting_length=10,add_correction_term=True)
 
-    X_pred_times,Y_pred_mean,Y_pred_cov,Y_pred_actual,loss_score=dpp.predict(start_time=start, end_time=end,pred_length=3)
-    df_mean, df_var, df_score = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=10,add_correction_term=False)
-    print("Y_pred_mean:",Y_pred_mean)
-    print("Y_pred_actual:",Y_pred_actual)
-    print("score:",loss_score)
+    #
+    X_pred_times,Y_pred_mean,Y_pred_cov,Y_trad,Y_pred_actual,loss_score_pred,loss_score_trad=dpp.predict(start_time=start, end_time=end,pred_length=4)
+    #df_mean,df_var,loss_score_pred,loss_score_trad = dpp.predict_multi(start_time=start, end_time=end, fitting_windows=5)
+    # print("Y_pred_mean:",Y_pred_mean)
+    # print("Y_pred_actual:",Y_pred_actual)
+    # print("score:",loss_score)
 
     print("df_mean:",df_mean)
     print("df_var:",df_var)
-    print("df_score:",df_score)
+    print("loss_score_pred:",np.mean(loss_score_pred))
+    print("loss_score_trad:",np.mean(loss_score_trad))
+    print("asdsdsd")

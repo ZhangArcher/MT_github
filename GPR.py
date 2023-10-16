@@ -32,6 +32,8 @@ class GaussianProcess:
 
     def predict(self,X_pred_array):
         Y_mean, Y_cov = self.__gp.predict_y(X_pred_array, full_cov=False)
+        Y_mean = Y_mean.numpy()
+        Y_cov = Y_cov.numpy()
         #Y=self.rev_normalize_data(Y_mean)
         return Y_mean,Y_cov
 

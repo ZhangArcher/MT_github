@@ -35,6 +35,8 @@ class GaussianProcess:
     def predict(self,X_pred_array):
         Y_mean, Y_cov = self.__gp.predict_y(X_pred_array, full_cov=False)
         #Y=self.rev_normalize_data(Y_mean)
+        Y_mean = Y_mean.numpy()
+        Y_cov = Y_cov.numpy()
         return Y_mean,Y_cov
 
     def get_kernels(self):
@@ -51,8 +53,7 @@ class GaussianProcess:
         return self.__kernels
 
     def initial_GP(self):
-        self.__gp = gpflow.models.VGP((X_array, Y_array), kernel=gpflow.kernels.SquaredExponential(),
-                                      likelihood=gpflow.likelihoods.StudentT(), )
+        pass
 
     def normalize_data(self,data):
         self.__max_value = numpy.max(data)

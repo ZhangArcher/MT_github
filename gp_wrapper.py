@@ -19,11 +19,10 @@ class GaussianProcessWrapper:
 
         if(self.__type.__eq__("GPR")):
             self.__gp=GPR.GaussianProcess()
-            print("GP is : GPR"
-                  "")
+
         elif (self.__type.__eq__("VGP")):
             self.__gp=VGP.GaussianProcess()
-            print("GP is : VGP")
+
 
     def fit(self,X_array,Y_array):
 

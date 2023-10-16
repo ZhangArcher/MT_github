@@ -1,6 +1,6 @@
 import numpy as np
 import pandas
-from sklearn.linear_model import LinearRegression
+import sklearn.linear_model as linear_model
 import util
 
 
@@ -25,13 +25,17 @@ class fusion:
         self.__correction_term=None
         self.__X=[]
         self.__y=[]
-        self.__mapping=LinearRegression()
 
-    def fusion_price_long_term(self,pred_l,pred_s,actual_l):
+        self.__mapping=linear_model.LinearRegression()
+
+    def fusion_price_long_term(self,pred_l,pred_s_list,actual_l):
 
         #return self.fusion_price_correction(pred_l=pred_l,pred_s=pred_s,actual_l=actual_l)
 
-        return self.fusion_price_linear(pred_l=pred_l, pred_s=pred_s, actual_l=actual_l)
+        return self.fusion_price_linear(pred_l=pred_l, pred_s_list=pred_s_list, actual_l=actual_l)
+
+    def fusion_price_long_term_trad(self,pred_l,pred_s_list,actual_l,trad_l):
+        return self.fusion_price_linear_trad(pred_l=pred_l, pred_s_list=pred_s_list, actual_l=actual_l,trad_l=trad_l)
 
     def fusion_price_correction(self, pred_l, pred_s, actual_l):
         """
@@ -71,7 +75,7 @@ class fusion:
 
         return fusion_result, error_fusion, error_long
 
-    def fusion_price_linear(self, pred_l, pred_s, actual_l):
+    def fusion_price_linear(self, pred_l, pred_s_list, actual_l):
         """
            it is going to predict the next long-term price using fusion algorithm
 
@@ -81,8 +85,8 @@ class fusion:
                 The predicted  long-term price
              actual_l:
                 The actual long-term price
-             pred_s: np.array 1D
-                 The predicted  short-term price
+             pred_s_list: np.array 1D
+                 The list of the predicted  short-term prices
 
        :return
         -------
@@ -95,18 +99,91 @@ class fusion:
 
         """
         if(len(self.__X)>2):
-            fusion_result=self.__mapping.predict([[pred_l[0,0],pred_s[0,0]]])
+            # for ele in pred_s_list:
+            #     ele=ele.tolist()
+            # pred_l=pred_l.tolist()
+            #fusion_result=self.__mapping.predict([[pred_l[0,0],pred_s_list[0,0]]])
+            mapping_input=None
+            mapping_input = (pred_l.tolist())
+            mapping_input.extend(pred_s_list)
+            mapping_input=[mapping_input]
+            fusion_result = self.__mapping.predict(mapping_input)
         else:
-            fusion_result=pred_s
+            fusion_result=pred_s_list[-1]
         error_fusion = np.mean(abs(actual_l - fusion_result))
-        error_long = np.mean(abs(actual_l - pred_l))
+        error_long = np.mean(abs(pred_l - actual_l))
        # self.update_error_price(error_fusion, error_long)
-        error_short= np.mean(abs(actual_l - pred_s))
-        self.__X.append([pred_l[0,0],pred_s[0,0]])
-        self.__y.append(actual_l[0])
+        error_short= np.mean(abs(pred_s_list[-1] - actual_l))
+
+        mapping_input_fit = (pred_l.tolist())
+        mapping_input_fit.extend(pred_s_list)
+        #mapping_input_fit2=map(float,mapping_input_fit)
+
+
+
+        self.__X.append(mapping_input_fit)
+
+        self.__y.append(actual_l)
         self.__mapping.fit(self.__X, self.__y)
 
         return fusion_result, error_fusion, error_long,error_short
+
+
+
+
+    def fusion_price_linear_trad(self, pred_l, pred_s_list, actual_l,trad_l):
+        """
+           it is going to predict the next long-term price using fusion algorithm
+
+        :arg
+        -------
+             pred_l: np.array 1D
+                The predicted  long-term price
+             actual_l:
+                The actual long-term price
+             pred_s_list: np.array 1D
+                 The list of the predicted  short-term prices
+
+       :return
+        -------
+        fusion_result:float
+             the fusion long-term price
+        error_fusion:float
+             the difference between the fusion  price and the actual price
+        error_long:float
+             the difference between the predicted long-term price and the actual price
+
+        """
+        if(len(self.__X)>2):
+            # for ele in pred_s_list:
+            #     ele=ele.tolist()
+            # pred_l=pred_l.tolist()
+            #fusion_result=self.__mapping.predict([[pred_l[0,0],pred_s_list[0,0]]])
+            mapping_input=None
+            mapping_input = (trad_l.tolist())
+            mapping_input.extend(pred_s_list)
+            mapping_input=[mapping_input]
+            fusion_result = self.__mapping.predict(mapping_input)
+        else:
+            fusion_result=pred_s_list[-1]
+        error_fusion = np.mean(abs(actual_l - fusion_result))
+        error_long = np.mean(abs(pred_l - actual_l))
+       # self.update_error_price(error_fusion, error_long)
+        error_short= np.mean(abs(pred_s_list[-1] - actual_l))
+
+        mapping_input_fit = (trad_l.tolist())
+        mapping_input_fit.extend(pred_s_list)
+        #mapping_input_fit2=map(float,mapping_input_fit)
+
+
+
+        self.__X.append(mapping_input_fit)
+
+        self.__y.append(actual_l)
+        self.__mapping.fit(self.__X, self.__y)
+
+        return fusion_result, error_fusion, error_long,error_short
+
 
     def fusion_portfolio_long_term(self,pred_l,pred_s,actual_l,return_l):
 
