@@ -455,7 +455,7 @@ The fusion consists of 3 steps:
         averaeg error of fusion :  2.377108661587745
         average error of long_term prediction :  1.549716047855353
         average error of short_term prediction :  1.2162782394630864
-  ![Image text](https://github.com/ZhangArcher/MT_github/Tutorial_notebook/ex2_multi.png)
+  ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex2_multi.png)
 
 As we can see ,  average error of short_term prediction is decreasing with the excess_time increasing .While excess_time >=15 ,  average error of short_term prediction is smaller than   average error of long_term prediction.
 It seems that excess_time can really decrease the prediction error.
@@ -632,7 +632,7 @@ But we  modify step 2 and step 3
         average error of long_term prediction :  1.549716047855353
         average error of short_term prediction :  1.2162782394630864
 
-  ![Image text](https://github.com/ZhangArcher/MT_github/Tutorial_notebook/ex2_single.png)
+  ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex2_single.png)
 ###3.2 simple Gaussian process fusion without any correction term
       we try to predict the long-term price directly using short-term GP  and then compare them with the long-term GP.
             Example (in formulas):
