@@ -1,0 +1,719 @@
+fitting_windows is : 2
+pred_length is : 1
+average predicted profit : 0.029132086549151327
+average actual profit : 0.034164794343668224
+average score : -0.005032707794516901
+cumulative predicted profit : 7.805976347820157
+cumulative actual profit : 11.804307925111864
+cumulative score : -3.998331577291707
+asds
+fitting_windows is : 2
+pred_length is : 2
+average predicted profit : 0.02438472748354722
+average actual profit : 0.034164794343668224
+average score : -0.009780066860121008
+cumulative predicted profit : 5.553117846829947
+cumulative actual profit : 11.804307925111864
+cumulative score : -6.251190078281917
+asds
+fitting_windows is : 2
+pred_length is : 3
+average predicted profit : 0.023589129400264537
+average actual profit : 0.034164794343668224
+average score : -0.010575664943403689
+cumulative predicted profit : 5.244822177113739
+cumulative actual profit : 11.804307925111864
+cumulative score : -6.559485747998125
+asds
+fitting_windows is : 2
+pred_length is : 4
+average predicted profit : 0.02228447752986634
+average actual profit : 0.034164794343668224
+average score : -0.011880316813801887
+cumulative predicted profit : 4.563611229034027
+cumulative actual profit : 11.804307925111864
+cumulative score : -7.240696696077837
+asds
+fitting_windows is : 2
+pred_length is : 5
+average predicted profit : 0.021772869799986223
+average actual profit : 0.03383608002111297
+average score : -0.012063210221126741
+cumulative predicted profit : 3.963683521139564
+cumulative actual profit : 11.877778845701513
+cumulative score : -7.914095324561949
+asds
+fitting_windows is : 3
+pred_length is : 1
+average predicted profit : 0.025917383600528004
+average actual profit : 0.032959288338063095
+average score : -0.007041904737535089
+cumulative predicted profit : 4.614704276146579
+cumulative actual profit : 10.407407087355079
+cumulative score : -5.7927028112085
+asds
+fitting_windows is : 3
+pred_length is : 2
+average predicted profit : 0.0236875511531436
+average actual profit : 0.032641012011734624
+average score : -0.008953460858591026
+cumulative predicted profit : 4.746073303443677
+cumulative actual profit : 10.472183589671879
+cumulative score : -5.726110286228201
+asds
+fitting_windows is : 3
+pred_length is : 3
+average predicted profit : 0.03586667896758442
+average actual profit : 0.032641012011734624
+average score : 0.0032256669558497993
+cumulative predicted profit : 12.446222798463415
+cumulative actual profit : 10.472183589671879
+cumulative score : 1.9740392087915364
+asds
+fitting_windows is : 3
+pred_length is : 4
+average predicted profit : 0.016046356760426265
+average actual profit : 0.032641012011734624
+average score : -0.01659465525130835
+cumulative predicted profit : 2.738022436310979
+cumulative actual profit : 10.472183589671879
+cumulative score : -7.734161153360899
+asds
+fitting_windows is : 3
+pred_length is : 5
+average predicted profit : 0.020426015567003006
+average actual profit : 0.03187269012953132
+average score : -0.011446674562528304
+cumulative predicted profit : 4.0215494024963405
+cumulative actual profit : 10.130095596467848
+cumulative score : -6.108546193971508
+asds
+fitting_windows is : 4
+pred_length is : 1
+average predicted profit : 0.03187640889885071
+average actual profit : 0.032954271506301494
+average score : -0.0010778626074507789
+cumulative predicted profit : 9.061031560284034
+cumulative actual profit : 10.071320392743374
+cumulative score : -1.0102888324593398
+asds
+fitting_windows is : 4
+pred_length is : 2
+average predicted profit : 0.03081689573733429
+average actual profit : 0.032954271506301494
+average score : -0.0021373757689671946
+cumulative predicted profit : 8.561967344954144
+cumulative actual profit : 10.071320392743374
+cumulative score : -1.5093530477892294
+asds
+fitting_windows is : 4
+pred_length is : 3
+average predicted profit : 0.026645426338723233
+average actual profit : 0.03185485705318628
+average score : -0.00520943071446304
+cumulative predicted profit : 6.480109022355479
+cumulative actual profit : 9.802964129759486
+cumulative score : -3.322855107404007
+asds
+fitting_windows is : 4
+pred_length is : 4
+average predicted profit : 0.02533303877654967
+average actual profit : 0.03185485705318628
+average score : -0.006521818276636592
+cumulative predicted profit : 5.654338022830551
+cumulative actual profit : 9.802964129759486
+cumulative score : -4.148626106928935
+asds
+fitting_windows is : 4
+pred_length is : 5
+average predicted profit : 0.02525506138728664
+average actual profit : 0.033181358283173465
+average score : -0.007926296895886817
+cumulative predicted profit : 5.939756888422343
+cumulative actual profit : 11.220545888740414
+cumulative score : -5.280789000318071
+asds
+fitting_windows is : 5
+pred_length is : 1
+average predicted profit : 0.02958600237607842
+average actual profit : 0.03364132789931819
+average score : -0.004055325523239775
+cumulative predicted profit : 7.679623290018373
+cumulative actual profit : 10.305221048609724
+cumulative score : -2.6255977585913506
+asds
+fitting_windows is : 5
+pred_length is : 2
+average predicted profit : 0.029318454019492336
+average actual profit : 0.03330697118013713
+average score : -0.003988517160644796
+cumulative predicted profit : 7.611773724999909
+cumulative actual profit : 10.369361537160561
+cumulative score : -2.7575878121606516
+asds
+fitting_windows is : 5
+pred_length is : 3
+average predicted profit : 0.02476395322391191
+average actual profit : 0.03364132789931819
+average score : -0.008877374675406276
+cumulative predicted profit : 5.407604097487354
+cumulative actual profit : 10.305221048609724
+cumulative score : -4.8976169511223695
+asds
+fitting_windows is : 5
+pred_length is : 4
+average predicted profit : 0.031086604235418515
+average actual profit : 0.03384658036187852
+average score : -0.002759976126459992
+cumulative predicted profit : 9.240701802710115
+cumulative actual profit : 11.481136649455948
+cumulative score : -2.240434846745833
+asds
+fitting_windows is : 5
+pred_length is : 5
+average predicted profit : 0.03121671012939928
+average actual profit : 0.03347791430691974
+average score : -0.002261204177520451
+cumulative predicted profit : 10.283309732222131
+cumulative actual profit : 11.509953908532669
+cumulative score : -1.226644176310538
+asds
+fitting_windows is : 6
+pred_length is : 1
+average predicted profit : 0.03400211269924128
+average actual profit : 0.03495123990857968
+average score : -0.0009491272093384018
+cumulative predicted profit : 10.365588035349816
+cumulative actual profit : 11.094621482875851
+cumulative score : -0.7290334475260352
+asds
+fitting_windows is : 6
+pred_length is : 2
+average predicted profit : 0.028957038064492357
+average actual profit : 0.03495123990857968
+average score : -0.00599420184408732
+cumulative predicted profit : 7.690576982652479
+cumulative actual profit : 11.094621482875851
+cumulative score : -3.404044500223373
+asds
+fitting_windows is : 6
+pred_length is : 3
+average predicted profit : 0.03006473338397887
+average actual profit : 0.03459658357546723
+average score : -0.004531850191488358
+cumulative predicted profit : 8.237411621477468
+cumulative actual profit : 11.163675260455351
+cumulative score : -2.9262636389778827
+asds
+fitting_windows is : 6
+pred_length is : 4
+average predicted profit : 0.02458906173874872
+average actual profit : 0.03495123990857968
+average score : -0.01036217816983096
+cumulative predicted profit : 5.309870556020644
+cumulative actual profit : 11.094621482875851
+cumulative score : -5.7847509268552075
+asds
+fitting_windows is : 6
+pred_length is : 5
+average predicted profit : 0.038313350685777195
+average actual profit : 0.03495123990857968
+average score : 0.0033621107771975105
+cumulative predicted profit : 13.880848763752006
+cumulative actual profit : 11.094621482875851
+cumulative score : 2.7862272808761546
+asds
+fitting_windows is : 7
+pred_length is : 1
+average predicted profit : 0.033231043684493436
+average actual profit : 0.03510465186104218
+average score : -0.0018736081765487558
+cumulative predicted profit : 9.116979050740612
+cumulative actual profit : 10.846966837171601
+cumulative score : -1.7299877864309892
+asds
+fitting_windows is : 7
+pred_length is : 2
+average predicted profit : 0.02932168878243503
+average actual profit : 0.03474364467436005
+average score : -0.005421955891925021
+cumulative predicted profit : 6.555782017673169
+cumulative actual profit : 10.91447919318504
+cumulative score : -4.35869717551187
+asds
+fitting_windows is : 7
+pred_length is : 3
+average predicted profit : 0.025017959726580635
+average actual profit : 0.033911422542879724
+average score : -0.008893462816299087
+cumulative predicted profit : 4.737920393498931
+cumulative actual profit : 10.557943017888594
+cumulative score : -5.8200226243896624
+asds
+fitting_windows is : 7
+pred_length is : 4
+average predicted profit : 0.02509649205086053
+average actual profit : 0.03474364467436005
+average score : -0.009647152623499525
+cumulative predicted profit : 4.88082012002352
+cumulative actual profit : 10.91447919318504
+cumulative score : -6.03365907316152
+asds
+fitting_windows is : 7
+pred_length is : 5
+average predicted profit : 0.024305158971189893
+average actual profit : 0.03474364467436005
+average score : -0.010438485703170158
+cumulative predicted profit : 3.8751814129674638
+cumulative actual profit : 10.91447919318504
+cumulative score : -7.039297780217575
+asds
+fitting_windows is : 8
+pred_length is : 1
+average predicted profit : 0.03238315447313458
+average actual profit : 0.037490445642936084
+average score : -0.005107291169801509
+cumulative predicted profit : 8.670088142987908
+cumulative actual profit : 12.775976573823883
+cumulative score : -4.105888430835975
+asds
+fitting_windows is : 8
+pred_length is : 2
+average predicted profit : 0.024852042494649694
+average actual profit : 0.037490445642936084
+average score : -0.012638403148286396
+cumulative predicted profit : 5.19174254232819
+cumulative actual profit : 12.775976573823883
+cumulative score : -7.584234031495693
+asds
+fitting_windows is : 8
+pred_length is : 3
+average predicted profit : 0.02539281069639078
+average actual profit : 0.037490445642936084
+average score : -0.012097634946545309
+cumulative predicted profit : 5.036443586098715
+cumulative actual profit : 12.775976573823883
+cumulative score : -7.739532987725168
+asds
+fitting_windows is : 8
+pred_length is : 4
+average predicted profit : 0.02760285676636255
+average actual profit : 0.03622265611374924
+average score : -0.008619799347386695
+cumulative predicted profit : 6.325211849946844
+cumulative actual profit : 12.435553154091213
+cumulative score : -6.110341304144369
+asds
+fitting_windows is : 8
+pred_length is : 5
+average predicted profit : 0.028873272508580093
+average actual profit : 0.03622265611374924
+average score : -0.007349383605169149
+cumulative predicted profit : 6.861677982350491
+cumulative actual profit : 12.435553154091213
+cumulative score : -5.573875171740722
+asds
+fitting_windows is : 9
+pred_length is : 1
+average predicted profit : 0.02763563951940361
+average actual profit : 0.03528423162115859
+average score : -0.007648592101754978
+cumulative predicted profit : 5.889705142617038
+cumulative actual profit : 10.58166754659502
+cumulative score : -4.691962403977981
+asds
+fitting_windows is : 9
+pred_length is : 2
+average predicted profit : 0.030154571853520523
+average actual profit : 0.03491166553532927
+average score : -0.00475709368180875
+cumulative predicted profit : 6.841437686340274
+cumulative actual profit : 10.64752865941537
+cumulative score : -3.8060909730750954
+asds
+fitting_windows is : 9
+pred_length is : 3
+average predicted profit : 0.02819755932546138
+average actual profit : 0.03491166553532927
+average score : -0.00671410620986789
+cumulative predicted profit : 6.625331982710035
+cumulative actual profit : 10.64752865941537
+cumulative score : -4.0221966767053345
+asds
+fitting_windows is : 9
+pred_length is : 4
+average predicted profit : 0.037674769553932494
+average actual profit : 0.035438137817277914
+average score : 0.002236631736654581
+cumulative predicted profit : 12.609244509988931
+cumulative actual profit : 11.789128103948903
+cumulative score : 0.8201164060400288
+asds
+fitting_windows is : 9
+pred_length is : 5
+average predicted profit : 0.02171388643273219
+average actual profit : 0.035438137817277914
+average score : -0.013724251384545735
+cumulative predicted profit : 4.237687403901489
+cumulative actual profit : 11.789128103948903
+cumulative score : -7.551440700047413
+asds
+fitting_windows is : 10
+pred_length is : 1
+average predicted profit : 0.028613064243958018
+average actual profit : 0.035138596648383785
+average score : -0.006525532404425765
+cumulative predicted profit : 6.177872581711122
+cumulative actual profit : 10.112909036155838
+cumulative score : -3.935036454444716
+asds
+fitting_windows is : 10
+pred_length is : 2
+average predicted profit : 0.02697896960825589
+average actual profit : 0.035138596648383785
+average score : -0.008159627040127897
+cumulative predicted profit : 5.919582366661184
+cumulative actual profit : 10.112909036155838
+cumulative score : -4.193326669494653
+asds
+fitting_windows is : 10
+pred_length is : 3
+average predicted profit : 0.039923868615413416
+average actual profit : 0.03389860351574477
+average score : 0.006025265099668644
+cumulative predicted profit : 14.304692541056488
+cumulative actual profit : 9.843444619276182
+cumulative score : 4.461247921780306
+asds
+fitting_windows is : 10
+pred_length is : 4
+average predicted profit : 0.020252168955914484
+average actual profit : 0.035138596648383785
+average score : -0.014886427692469307
+cumulative predicted profit : 3.5791931710949707
+cumulative actual profit : 10.112909036155838
+cumulative score : -6.533715865060866
+asds
+fitting_windows is : 10
+pred_length is : 5
+average predicted profit : 0.03192464480637217
+average actual profit : 0.03489010626900714
+average score : -0.0029654614626349724
+cumulative predicted profit : 9.209813809624197
+cumulative actual profit : 11.295159641727492
+cumulative score : -2.085345832103295
+asds
+fitting_windows is : 11
+pred_length is : 1
+average predicted profit : 0.02916554973921381
+average actual profit : 0.03494760393013417
+average score : -0.005782054190920371
+cumulative predicted profit : 6.446772891324917
+cumulative actual profit : 9.636269739247018
+cumulative score : -3.1894968479221006
+asds
+fitting_windows is : 11
+pred_length is : 2
+average predicted profit : 0.030094631425390084
+average actual profit : 0.03456966278534914
+average score : -0.004475031359959059
+cumulative predicted profit : 6.769066476711944
+cumulative actual profit : 9.696246623388317
+cumulative score : -2.927180146676373
+asds
+fitting_windows is : 11
+pred_length is : 3
+average predicted profit : 0.023358968692350855
+average actual profit : 0.03494760393013417
+average score : -0.011588635237783328
+cumulative predicted profit : 4.348224151787941
+cumulative actual profit : 9.636269739247018
+cumulative score : -5.288045587459076
+asds
+fitting_windows is : 11
+pred_length is : 4
+average predicted profit : 0.02146802706934859
+average actual profit : 0.03456966278534914
+average score : -0.013101635716000551
+cumulative predicted profit : 3.7942604601874677
+cumulative actual profit : 9.696246623388317
+cumulative score : -5.901986163200849
+asds
+fitting_windows is : 11
+pred_length is : 5
+average predicted profit : 0.029538169218886724
+average actual profit : 0.03494760393013417
+average score : -0.005409434711247455
+cumulative predicted profit : 6.618805347891602
+cumulative actual profit : 9.636269739247018
+cumulative score : -3.017464391355416
+asds
+fitting_windows is : 12
+pred_length is : 1
+average predicted profit : 0.028452505904343704
+average actual profit : 0.0340744123928013
+average score : -0.005621906488457599
+cumulative predicted profit : 5.8566411216400525
+cumulative actual profit : 8.763720608791761
+cumulative score : -2.9070794871517087
+asds
+fitting_windows is : 12
+pred_length is : 2
+average predicted profit : 0.023517915421272805
+average actual profit : 0.0340744123928013
+average score : -0.010556496971528492
+cumulative predicted profit : 4.389825080105205
+cumulative actual profit : 8.763720608791761
+cumulative score : -4.373895528686556
+asds
+fitting_windows is : 12
+pred_length is : 3
+average predicted profit : 0.02630956859978394
+average actual profit : 0.033703074586583566
+average score : -0.007393505986799626
+cumulative predicted profit : 5.29923338938652
+cumulative actual profit : 8.818266680022981
+cumulative score : -3.519033290636461
+asds
+fitting_windows is : 12
+pred_length is : 4
+average predicted profit : 0.027258043008591692
+average actual profit : 0.03282979271076607
+average score : -0.0055717497021743785
+cumulative predicted profit : 5.903864437513884
+cumulative actual profit : 8.530206112112182
+cumulative score : -2.626341674598298
+asds
+fitting_windows is : 12
+pred_length is : 5
+average predicted profit : 0.023348360304142505
+average actual profit : 0.033703074586583566
+average score : -0.010354714282441068
+cumulative predicted profit : 4.2227120850482684
+cumulative actual profit : 8.818266680022981
+cumulative score : -4.595554594974713
+asds
+fitting_windows is : 13
+pred_length is : 1
+average predicted profit : 0.024427613100174578
+average actual profit : 0.03153331559405252
+average score : -0.007105702493877941
+cumulative predicted profit : 4.511502378038323
+cumulative actual profit : 7.1858838979009265
+cumulative score : -2.674381519862603
+asds
+fitting_windows is : 13
+pred_length is : 2
+average predicted profit : 0.028064910085962187
+average actual profit : 0.031191298855301423
+average score : -0.0031263887693392376
+cumulative predicted profit : 5.609364216193527
+cumulative actual profit : 7.230609392066152
+cumulative score : -1.621245175872625
+asds
+fitting_windows is : 13
+pred_length is : 3
+average predicted profit : 0.03242745803988
+average actual profit : 0.03033986356422345
+average score : 0.0020875944756565535
+cumulative predicted profit : 8.189456529940994
+cumulative actual profit : 6.994411789589664
+cumulative score : 1.1950447403513298
+asds
+fitting_windows is : 13
+pred_length is : 4
+average predicted profit : 0.035591441975020975
+average actual profit : 0.03184338459103758
+average score : 0.003748057383983403
+cumulative predicted profit : 10.106957664518742
+cumulative actual profit : 8.005855923882006
+cumulative score : 2.101101740636736
+asds
+fitting_windows is : 13
+pred_length is : 5
+average predicted profit : 0.02693118880867063
+average actual profit : 0.03033986356422345
+average score : -0.003408674755552819
+cumulative predicted profit : 5.268176389080973
+cumulative actual profit : 6.994411789589664
+cumulative score : -1.726235400508691
+asds
+fitting_windows is : 14
+pred_length is : 1
+average predicted profit : 0.024437517453309354
+average actual profit : 0.032248352748658254
+average score : -0.007810835295348892
+cumulative predicted profit : 4.421208648198995
+cumulative actual profit : 7.332155708311403
+cumulative score : -2.9109470601124077
+asds
+fitting_windows is : 14
+pred_length is : 2
+average predicted profit : 0.021534597370564693
+average actual profit : 0.032248352748658254
+average score : -0.010713755378093555
+cumulative predicted profit : 3.78603869443489
+cumulative actual profit : 7.332155708311403
+cumulative score : -3.5461170138765126
+asds
+fitting_windows is : 14
+pred_length is : 3
+average predicted profit : 0.020594162095321826
+average actual profit : 0.032248352748658254
+average score : -0.011654190653336421
+cumulative predicted profit : 3.405969866995543
+cumulative actual profit : 7.332155708311403
+cumulative score : -3.9261858413158595
+asds
+fitting_windows is : 14
+pred_length is : 4
+average predicted profit : 0.020915023382639328
+average actual profit : 0.032248352748658254
+average score : -0.01133332936601892
+cumulative predicted profit : 3.470067994831398
+cumulative actual profit : 7.332155708311403
+cumulative score : -3.8620877134800047
+asds
+fitting_windows is : 14
+pred_length is : 5
+average predicted profit : 0.019489219751149034
+average actual profit : 0.03253395451275221
+average score : -0.013044734761603172
+cumulative predicted profit : 3.2503958123900616
+cumulative actual profit : 8.168818623601345
+cumulative score : -4.918422811211283
+asds
+fitting_windows is : 15
+pred_length is : 1
+average predicted profit : 0.026133758435782035
+average actual profit : 0.03333031537814051
+average score : -0.007196556942358479
+cumulative predicted profit : 4.916555533728598
+cumulative actual profit : 7.674202543402912
+cumulative score : -2.757647009674314
+asds
+fitting_windows is : 15
+pred_length is : 2
+average predicted profit : 0.02606018842271429
+average actual profit : 0.03295383984408955
+average score : -0.006893651421375259
+cumulative predicted profit : 4.737827646997009
+cumulative actual profit : 7.721967370382373
+cumulative score : -2.984139723385364
+asds
+fitting_windows is : 15
+pred_length is : 3
+average predicted profit : 0.02498813517825775
+average actual profit : 0.03295383984408955
+average score : -0.007965704665831803
+cumulative predicted profit : 4.65723746083643
+cumulative actual profit : 7.721967370382373
+cumulative score : -3.0647299095459433
+asds
+fitting_windows is : 15
+pred_length is : 4
+average predicted profit : 0.01873024399876143
+average actual profit : 0.03295383984408955
+average score : -0.014223595845328119
+cumulative predicted profit : 2.9625531801599156
+cumulative actual profit : 7.721967370382373
+cumulative score : -4.759414190222458
+asds
+fitting_windows is : 15
+pred_length is : 5
+average predicted profit : 0.028448011435579675
+average actual profit : 0.03316170064121841
+average score : -0.00471368920563872
+cumulative predicted profit : 6.420965953570905
+cumulative actual profit : 8.57135593139249
+cumulative score : -2.150389977821586
+asds
+fitting_windows is : 16
+pred_length is : 1
+average predicted profit : 0.02362519179254616
+average actual profit : 0.03345908815277497
+average score : -0.009833896360228809
+cumulative predicted profit : 4.109523928205505
+cumulative actual profit : 7.492024811204442
+cumulative score : -3.3825008829989374
+asds
+fitting_windows is : 16
+pred_length is : 2
+average predicted profit : 0.02390116054695063
+average actual profit : 0.03345908815277497
+average score : -0.009557927605824338
+cumulative predicted profit : 4.377030654372705
+cumulative actual profit : 7.492024811204442
+cumulative score : -3.114994156831737
+asds
+fitting_windows is : 16
+pred_length is : 3
+average predicted profit : 0.030057779640567297
+average actual profit : 0.03216241527284962
+average score : -0.0021046356322823212
+cumulative predicted profit : 6.536859465690639
+cumulative actual profit : 7.292395397968217
+cumulative score : -0.7555359322775779
+asds
+fitting_windows is : 16
+pred_length is : 4
+average predicted profit : 0.0246159808901565
+average actual profit : 0.03216241527284962
+average score : -0.007546434382693116
+cumulative predicted profit : 4.64964131732771
+cumulative actual profit : 7.292395397968217
+cumulative score : -2.6427540806405068
+asds
+fitting_windows is : 16
+pred_length is : 5
+average predicted profit : 0.029552151467067515
+average actual profit : 0.03345908815277497
+average score : -0.003906936685707453
+cumulative predicted profit : 6.050378547198012
+cumulative actual profit : 7.492024811204442
+cumulative score : -1.4416462640064305
+asds
+fitting_windows is : 17
+pred_length is : 1
+average predicted profit : 0.02612618660132211
+average actual profit : 0.03419447288924438
+average score : -0.008068286287922279
+cumulative predicted profit : 4.7664396511714004
+cumulative actual profit : 7.623782517422184
+cumulative score : -2.857342866250783
+asds
+fitting_windows is : 17
+pred_length is : 2
+average predicted profit : 0.028137714070882905
+average actual profit : 0.03379489580406191
+average score : -0.0056571817331790035
+cumulative predicted profit : 5.251293923270165
+cumulative actual profit : 7.671233526281306
+cumulative score : -2.419939603011141
+asds
+fitting_windows is : 17
+pred_length is : 3
+average predicted profit : 0.023582331988233764
+average actual profit : 0.03419447288924438
+average score : -0.01061214090101063
+cumulative predicted profit : 3.9838629485246972
+cumulative actual profit : 7.623782517422184
+cumulative score : -3.6399195688974864
+asds
+fitting_windows is : 17
+pred_length is : 4
+average predicted profit : 0.032740446864346864
+average actual profit : 0.03441088638765117
+average score : -0.0016704395233043065
+cumulative predicted profit : 7.573431877256271
+cumulative actual profit : 8.493722595117548
+cumulative score : -0.9202907178612767
+asds
+fitting_windows is : 17
+pred_length is : 5
+average predicted profit : 0.019185667209189763
+average actual profit : 0.03379489580406191
+average score : -0.014609228594872152
+cumulative predicted profit : 2.951595467238013
+cumulative actual profit : 7.671233526281306
+cumulative score : -4.719638059043293

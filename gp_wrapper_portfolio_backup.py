@@ -1,11 +1,10 @@
-import math
 
 import numpy as np
 import pandas
 import pandas as pd
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
-import matplotlib.pyplot as plt
+
 import gp_wrapper
 import data_handler_portfolio
 import logging
@@ -105,7 +104,7 @@ class gp_wrapper_portfolio:
         assert target_return.shape==portfolios.shape
         return target_return
 
-    def predict_V1(self, start_time: datetime.datetime, end_time: datetime.datetime, pred_length: int,with_loss=True):
+    def predict(self, start_time: datetime.datetime, end_time: datetime.datetime, pred_length: int,with_loss=True):
         """
             predict the portfolios between [end_time+1,end_time+pred_length) using GPs
             GPs are generated from the data sets between [start_time,end_time]
@@ -140,13 +139,14 @@ class gp_wrapper_portfolio:
         assert start_time <= end_time,"error : start_time > end_time"
         start_time = self.find_matched_time_with_increment(begin_time=start_time, time_increment=0)
         end_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=0)
+
         pred_start_time = self.find_matched_time_with_increment(begin_time=end_time,time_increment=1)
         pred_end_time=self.find_matched_time_with_increment( begin_time=end_time,time_increment=pred_length)
 
 
         pred_time_index=self.__trading_time
-        pred_time_index=pred_time_index[pred_time_index<pred_end_time]
-        pred_time_index=pred_time_index[pred_time_index>=end_time]
+        pred_time_index=pred_time_index[pred_time_index<=pred_end_time]
+        pred_time_index=pred_time_index[pred_time_index>=pred_start_time]
 
         pred_portfolio_list=[]
         actual_portfolio_list=[]
@@ -156,126 +156,36 @@ class gp_wrapper_portfolio:
 
             X, Y, X_pred, Y_pred_actual = self.get_historical_positions(id=id,start_time=start_time,
                                             end_time= end_time, pred_start_time=pred_start_time,pred_end_time=pred_end_time)
-
-            self.__GPs_dict[id]=None
-            self.__GPs_dict[id]=gp_wrapper.GaussianProcessWrapper(GP_type=self.__GP_type)
+            assert  len(pred_time_index)==len(X_pred)
+            self.__GPs_dict[id]=gp_wrapper.GaussianProcessWrapper()
             self.__GPs_dict[id].fit(X, Y)
 
             assert len(X_pred) > 0
-
             Y_pred_mean, Y_cov = (self.__GPs_dict[id]).predict(X_pred)
-
-            pred_portfolio_list.append(pd.DataFrame(Y_pred_mean,index=pred_time_index,columns=[id]))
-
-            Y_actual=[]
-            # important: we predict allocation at next time point to do a decision at current time point
-            if(len(X_pred)>1):
-                Y_actual.append(Y[-1][0])
-                Y_actual.extend(Y_pred_actual[:-1])
-            else:
-                Y_actual.append(Y[-1][0])
-
-            actual_portfolio_list.append(pd.DataFrame({id: Y_actual}, index=pred_time_index))
-
-            #print("asdsd")
+            assert len(pred_time_index) == len(Y_pred_mean)
+            pred_portfolio_list.append(pd.DataFrame({id:Y_pred_mean[0]},index=pred_time_index))
+            actual_portfolio_list.append(pd.DataFrame({id: Y_pred_actual}, index=pred_time_index))
 
 
         pred_portfolio=pd.concat(pred_portfolio_list,axis=1)
         #to normalize the portfolio
         pred_portfolio=util.rebalance_portfolio(portfolio=pred_portfolio)
         actual_portfolio=pd.concat(actual_portfolio_list,axis=1)
-        #print("asas")
+
         pred_profit=util.compute_profit(portfolios=pred_portfolio,returns=self.__historical_return)
         actual_profit = util.compute_profit(portfolios=actual_portfolio, returns=self.__historical_return)
 
         if(with_loss):
-            loss_score=self.get_loss_function_result(pred_profit=pred_profit,actual_profit=actual_profit)
-            #print("score is " + str(loss_score))
+            loss_score=self.get_loss_function_result(pred_profit=pred_profit,target_profit=actual_profit)
+            print("score is " + str(loss_score))
         else:
             loss_score=np.zeros(actual_profit.shape)
-            #print("score is " + str(loss_score))
+            print("score is " + str(loss_score))
 
 
         return  actual_portfolio,actual_profit,pred_portfolio,pred_profit,loss_score
 
-    def predict_V2(self, start_time: datetime.datetime, end_time: datetime.datetime, pred_length: int, with_loss=True):
-        """
-            predict the portfolios between [end_time+1,end_time+pred_length) using GPs
-            GPs are generated from the data sets between [start_time,end_time]
 
-         :arg
-         -------
-           start_time：datetime.datetime
-                start time
-           end_time：datetime.datetime
-                end time
-           pred_length: int
-               The size of the time length what we want to predict (ignored time unit)
-            with_loss:bool
-               whether or not to compute loss
-         :return
-         -------
-            actual_portfolio:pd.Dataframe
-
-            actual_profit:pd.Dataframe
-
-            pred_portfolio:pd.Dataframe
-
-            pred_profit:pd.Dataframe
-
-            self.__historical_return:pd.Dataframe
-
-            loss_score:pd.Dataframe
-
-
-        """
-
-        assert start_time <= end_time, "error : start_time > end_time"
-        start_time = self.find_matched_time_with_increment(begin_time=start_time, time_increment=0)
-        end_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=0)
-
-        pred_start_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=1)
-        pred_end_time = self.find_matched_time_with_increment(begin_time=end_time, time_increment=pred_length)
-
-        pred_time_index = self.__trading_time
-        pred_time_index = pred_time_index[pred_time_index <= pred_end_time]
-        pred_time_index = pred_time_index[pred_time_index >= pred_start_time]
-
-        pred_portfolio_list = []
-        actual_portfolio_list = []
-
-        # predict the position for each stock
-        for id in self.__stock_list:
-            X, Y, X_pred, Y_pred_actual = self.get_historical_positions(id=id, start_time=start_time,
-                                                                        end_time=end_time,
-                                                                        pred_start_time=pred_start_time,
-                                                                        pred_end_time=pred_end_time)
-            assert len(pred_time_index) == len(X_pred)
-            self.__GPs_dict[id] = gp_wrapper.GaussianProcessWrapper()
-            self.__GPs_dict[id].fit(X, Y)
-
-            assert len(X_pred) > 0
-            Y_pred_mean, Y_cov = (self.__GPs_dict[id]).predict(X_pred)
-            assert len(pred_time_index) == len(Y_pred_mean)
-            pred_portfolio_list.append(pd.DataFrame({id: Y_pred_mean[0]}, index=pred_time_index))
-            actual_portfolio_list.append(pd.DataFrame({id: Y_pred_actual}, index=pred_time_index))
-
-        pred_portfolio = pd.concat(pred_portfolio_list, axis=1)
-        # to normalize the portfolio
-        pred_portfolio = util.rebalance_portfolio(portfolio=pred_portfolio)
-        actual_portfolio = pd.concat(actual_portfolio_list, axis=1)
-
-        pred_profit = util.compute_profit(portfolios=pred_portfolio, returns=self.__historical_return)
-        actual_profit = util.compute_profit(portfolios=actual_portfolio, returns=self.__historical_return)
-
-        if (with_loss):
-            loss_score = self.get_loss_function_result(pred_profit=pred_profit, actual_profit=actual_profit)
-
-        else:
-            loss_score = np.zeros(actual_profit.shape)
-
-
-        return actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score
 
     def find_matched_time_with_increment(self,begin_time:datetime.datetime,time_increment:int):
         """
@@ -310,7 +220,7 @@ class gp_wrapper_portfolio:
         return util.find_all_matched_times_by_length(trading_time=trading_time,begin_time=begin_time,time_length=time_increment)
 
 
-    def get_loss_function_result(self,pred_profit:pd.DataFrame,actual_profit:pd.DataFrame):
+    def get_loss_function_result(self,pred_profit:pd.DataFrame,target_profit:pd.DataFrame):
         """
            compute the loss for the predicted result
         :arg
@@ -322,7 +232,7 @@ class gp_wrapper_portfolio:
               loss_score:pandas.Dataframe
         """
         #loss_score = np.mean(pred_profit.loc[:, "Profit"] - target_profit.loc[:, "Profit"])
-        loss_score = (pred_profit.loc[:, "Profit"] - actual_profit.loc[:, "Profit"])
+        loss_score = (pred_profit.loc[:, "Profit"] - target_profit.loc[:, "Profit"])
         return loss_score
 
 
@@ -398,8 +308,8 @@ class gp_wrapper_portfolio:
         return self.__trading_time
 
 
-    def predict_multi_times(self,start_time: datetime.datetime, end_time: datetime.datetime,
-                           fitting_windows:int,match_different_timepoint=False):
+    def predict_multi(self,start_time: datetime.datetime, end_time: datetime.datetime,
+                           fitting_windows:int):
         """
 
                predict the target portfolio with a fixed time windows multiple
@@ -449,175 +359,62 @@ class gp_wrapper_portfolio:
                                                               time_increment=fitting_windows - 1)
         loss_score_list=[]
         time_index=[]
-        actual_profit_list=[]
-        pred_profit_list = []
+        mean_list=[]
+
         while(temp_end_time<=end_time):
-            if(match_different_timepoint==True):
-                actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score = self.predict_V1(start_time=temp_start_time,
+
+            actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score = self.predict(start_time=temp_start_time,
                                                                       end_time=temp_end_time,pred_length=1)
 
-            else:
-                actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score = self.predict_V2(
-                    start_time=temp_start_time,
-                    end_time=temp_end_time, pred_length=1)
-            assert actual_profit.shape[0] == 1
-            assert loss_score.shape[0] == 1
-            time_index.append(actual_portfolio.index[0])
-            loss_score_list.append(loss_score.iloc[0])
 
-            actual_profit_list.append(actual_profit.iloc[0])
-            pred_profit_list.append(pred_profit.iloc[0])
+            time_index.append(actual_portfolio.index[0])
+            loss_score_list.append(loss_score)
+            mean_list.append(actual_profit)
+
 
 
             temp_start_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=1)
             temp_end_time=self.find_matched_time_with_increment(begin_time=temp_end_time,time_increment=1)
 
         # collect the result
-        df_score = pd.DataFrame(data=loss_score_list, index=time_index)
+        #df_score = pd.DataFrame(data=loss_score_list, index=time_index)
 
-        df_actual_profit = pd.DataFrame(data=actual_profit_list, index=time_index)
-        df_pred_profit= pd.DataFrame(data=pred_profit_list, index=time_index)
-
-        return df_pred_profit,df_actual_profit, df_score
+       # df_mean = pd.DataFrame(data=mean_list, index=time_index)
 
 
-    def predict_multi_times_different_pred_length(self,start_time: datetime.datetime, end_time: datetime.datetime,
-                           fitting_windows:int,pred_length=1,match_different_timepoint=False):
-        """
-
-               predict the target portfolio with a fixed time windows multiple
-               For example:
-               iteration 1 :
-                 predict the portfolio at timepoint (start_time+fitting_length) using GP
-                GP is generated from the data set between [start_time,start_time+fitting_length-1]
-
-                iteration 2:
-                  predict the portfolio at timepoint (start_time+fitting_length+1) using a GP.
-                This GP is generated/fitted by the data set between  [start_time+1,start_time+fitting_length]
-
-                iteration ....
-
-                iteration n:
-            predict the portfolio at timepoint (start_time+fitting_length+n-1) using a GP.
-                This GP is generated/fitted by the data set between  [start_time+n-1,start_time+fitting_length+n-2]
-
-                :arg
-                -------
-                   start_time：str
-                        start time
-                   end_time：str
-                        end time
-                   fitting_length: int
-                       The size of the time length for the training (ignored time unit)
-
-               :return
-                -------
-                    df_mean: pandas.Dataframe
-                    the corresponding mean  of the predicted GP
-
-                    df_var: pandas.Dataframe
-                    the corresponding cov  of the predicted GP
-
-                    df_score: pandas.Dataframe
-                    the score of loss function
-
-                """
-
-        assert start_time < end_time
-        assert fitting_windows > 0
-
-        # get the cooresponding time points
-        temp_start_time = self.find_matched_time_with_increment(begin_time=start_time, time_increment=0)
-        temp_end_time = self.find_matched_time_with_increment(begin_time=temp_start_time,
-                                                              time_increment=fitting_windows - 1)
-        loss_score_list=[]
-        time_index=[]
-        actual_profit_list=[]
-        pred_profit_list = []
-        while(temp_end_time<=end_time):
-
-            if(match_different_timepoint):
-                actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score = self.predict_V1(
-                start_time=temp_start_time, end_time=temp_end_time, pred_length=pred_length)
-            else:
-                actual_portfolio, actual_profit, pred_portfolio, pred_profit, loss_score = self.predict_V2(
-                start_time=temp_start_time, end_time=temp_end_time, pred_length=pred_length)
-
-            # assert actual_profit.shape[0] == 1
-            # assert loss_score.shape[0] == 1
-            time_index.append(actual_portfolio)
-            loss_score_list.append(loss_score)
-
-            actual_profit_list.append(actual_profit)
-            pred_profit_list.append(pred_profit)
-
-
-            temp_start_time=self.find_matched_time_with_increment(begin_time=temp_start_time,time_increment=pred_length)
-            temp_end_time=self.find_matched_time_with_increment(begin_time=temp_end_time,time_increment=pred_length)
-
-        # collect the result
-        print("asds")
-        df_score = pd.concat(loss_score_list)
-
-        df_actual_profit = pd.concat(actual_profit_list)
-        df_pred_profit= pd.concat(pred_profit_list)
-
-        return df_pred_profit,df_actual_profit, df_score
-
+        return mean_list, loss_score_list
 
     def get_total_historical_return(self):
         return self.__historical_return
 
 
-
-
     def get_stock_ids(self):
-        return self.__historical_return.columns
+
+        ddd=self.__historical_return.columns
+        print("assdsd")
+        return ddd
 
 if __name__ == '__main__':
     #data_file_portfolio="portfolios_short_1day.csv"
     #data_file_return="historical_return_short_1day.csv"
-    # data_file_portfolio="demo_data/historical_portfolios_long.csv"
-    # data_file_return="demo_data/historical_return_long.csv"
-    data_file_portfolio="Tutorial_notebook/demo_data/ex3/historical_portfolios_long.csv"
-    data_file_return="Tutorial_notebook/demo_data/ex3/historical_return_long.csv"
+    data_file_portfolio="demo_data/historical_portfolios_long.csv"
+    data_file_return="demo_data/historical_return_long.csv"
 
-    start_time = "2013-01-22 00:00:00"
-    end_time = "2017-01-22 00:00:00"
+
+    start_time = "2015-01-22 00:00:00"
+    end_time = "2017-05-22 00:00:00"
 
     start=util.convert_time_into_datetime(time=start_time)
     end = util.convert_time_into_datetime(time=end_time)
 
-    print("assds")
-    fitting_windows_list=range(2,15)
-    #fitting_windows_list = [ 10,25]
-    scoreList=[]
-    dpp2 = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="VGP")
+    dpp = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="GPR")
+    actual_portfolio,actual_profit,pred_portfolio,pred_profit,loss_score=dpp.predict(start_time=start,end_time=end, pred_length=1,with_loss=True)
 
-
-    for fitting_windows in fitting_windows_list:
-        dpp2 = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="VGP")
-        df_pred_profit, df_actual_profit, df_score = dpp2.predict_multi_times_different_pred_length(start_time=start,
-                                        end_time=end,fitting_windows=fitting_windows,match_different_timepoint=False,pred_length=5)
-        print("fitting_windows is :",fitting_windows)
-        print("average predicted profit :",np.mean(df_pred_profit["Profit"]))
-        print("average actual profit :", np.mean(df_actual_profit["Profit"]))
-        print("average score :", np.mean(df_score))
-        print("cumulative predicted profit :", (util.compute_cumulative_profit(df_pred_profit)))
-        print("cumulative actual profit :", (util.compute_cumulative_profit(df_actual_profit)))
-        print("cumulative score :", (util.compute_cumulative_profit(df_pred_profit))-util.compute_cumulative_profit(df_actual_profit))
-        scoreList.append(np.mean(df_score))
-
-
+    # dpp2 = gp_wrapper_portfolio(data_file_portfolio=data_file_portfolio, data_file_return=data_file_return,GP_type="VGP")
+    # df_mean, df_score = dpp2.predict_multi(start_time=start, end_time=end,fitting_windows=16)
     #
-    # fig, ax = plt.subplots()
-    #
-    # ax.plot(fitting_windows_list, scoreList, label="score ")
-    #
-    # ax.set_xlabel('fitting_windows')
-    # ax.set_ylabel('score')
-    # # plt.yscale("log")
-    # ax.legend()
-    # #plt.savefig('ex3_.png')
-    # plt.show()
+    # print("sdsds")
+    #dpp.predict_by_time_interval(start_time=start, end_time=end,pred_length=3,add_correction_term=True)
+
+
 

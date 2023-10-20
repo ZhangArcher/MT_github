@@ -1,0 +1,21 @@
+    pred_length is :  1
+    average error of the predicted price is : 0.5301187168833223
+    average error of the traditional expected  price is : 2.9907073974609375
+    pred_length is :  5
+    average error of the predicted price is : 3.2608308340072343
+    average error of the traditional expected  price is : 3.2282928466796874
+    pred_length is :  10
+    average error of the predicted price is : 7.596514481210923
+    average error of the traditional expected  price is : 3.1007869720458983
+    pred_length is :  15
+    average error of the predicted price is : 13.868577634551452
+    average error of the traditional expected  price is : 3.0312103271484374
+    pred_length is :  20
+    average error of the predicted price is : 19.92183960638792
+    average error of the traditional expected  price is : 2.7863491058349608
+    pred_length is :  25
+    average error of the predicted price is : 26.31849348836495
+    average error of the traditional expected  price is : 2.525745697021484
+    pred_length is :  30
+    average error of the predicted price is : 32.38036134431269
+    average error of the traditional expected  price is : 2.4285430908203125

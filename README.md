@@ -149,27 +149,7 @@ whether or not using a ***larger fitting_windows*** or using a ***smaller pred_l
     error_function can be : pred_Price - actual_Price
     
 ##### result:
-    pred_length is :  1
-    average error of the predicted price is : 0.5301187168833223
-    average error of the traditional expected  price is : 2.9907073974609375
-    pred_length is :  5
-    average error of the predicted price is : 3.2608308340072343
-    average error of the traditional expected  price is : 3.2282928466796874
-    pred_length is :  10
-    average error of the predicted price is : 7.596514481210923
-    average error of the traditional expected  price is : 3.1007869720458983
-    pred_length is :  15
-    average error of the predicted price is : 13.868577634551452
-    average error of the traditional expected  price is : 3.0312103271484374
-    pred_length is :  20
-    average error of the predicted price is : 19.92183960638792
-    average error of the traditional expected  price is : 2.7863491058349608
-    pred_length is :  25
-    average error of the predicted price is : 26.31849348836495
-    average error of the traditional expected  price is : 2.525745697021484
-    pred_length is :  30
-    average error of the predicted price is : 32.38036134431269
-    average error of the traditional expected  price is : 2.4285430908203125
+     see : Tutorial_notebook/ex1_pred_lengths_result.txt
 
 Firstly, as we can see , the average error of the predicted priceror becomes larger while the pred_length is increasing.
 Hence , we need to shorten the pred_length.
@@ -179,7 +159,7 @@ The predicted price is better than the traditional expected price.
 
 #### Experiment1-fitting_windows (see:Tutorial_notebook/Experiment1.ipynb):
     goal : test the performance with different fitting_windows.
-    
+
 ##### data set:
 
     demo_data/ex1/long/MSFT.csv :
@@ -189,43 +169,17 @@ The predicted price is better than the traditional expected price.
 
     1.Using different fitting_windows(5,10,15,20,25,30) to predict the price.
     2.To compare the errors from different fitting_windows
-    
+
 ##### error_function:
     error_function can be : abs(pred_Price - actual_Price)
-    
+
 ##### result:
-    fitting_windows is :  2
-    average error of the predicted price is : 1.346718827482427
-    average error of the traditional expected  price is : 1.3241280070896253
-    fitting_windows is :  3
-    average error of the predicted price is : 1.3395735868976804
-    average error of the traditional expected  price is : 1.2678742248020811
-    fitting_windows is :  4
-    average error of the predicted price is : 1.3183825587589235
-    average error of the traditional expected  price is : 1.2624242534745207
-    fitting_windows is :  5
-    average error of the predicted price is : 1.315166334500046
-    average error of the traditional expected  price is : 1.2388227527791802
-    fitting_windows is :  10
-    average error of the predicted price is : 1.4281102401390058
-    average error of the traditional expected  price is : 1.2028422439307493
-    fitting_windows is :  15
-    average error of the predicted price is : 1.4611023723327736
-    average error of the traditional expected  price is : 1.1434098324143742
-    fitting_windows is :  20
-    average error of the predicted price is : 1.406233083068599
-    average error of the traditional expected  price is : 1.1266751674391466
-    fitting_windows is :  25
-    average error of the predicted price is : 1.4493031430717267
-    average error of the traditional expected  price is : 1.1170112536503716
-    fitting_windows is :  30
-    average error of the predicted price is : 1.462305502607272
-    average error of the traditional expected  price is : 1.1089905366202852
+    see:Tutorial_notebook/ex1_fitting_windows_result.txt
 
 
 Firstly,as we can see , the errors are not  decreasing while the fitting_window is  increasing.
 Hence , there is not evidence to prove that we can reduce the error by using a large fitting_windows.
-The minimal error is the error with fitting_windows =2 , the smallest fitting_windows. 
+The minimal error is the error with fitting_windows =2 , the smallest fitting_windows.
 Therefore, keeping fitting_windows smaller and smaller is the best way to reduce the error.
 Secondly,all average errors of the predicted price are larger than the corresponding average errors of the traditional expected price.
 The difference between two errors is smallest while fitting_windows =2 .
@@ -236,7 +190,7 @@ In this step , we predict long-term stock price with  short-term stock prices us
 
 
 
-# 3.1  fusion with  the excess time (multiple short-term data points)
+# 3.1  fusion with  the  forward window (multiple short-term data points)
 ##### Example:
 Here is an example about predicting long-term stock price with  short-term stock prices using some fusion methods.
 
@@ -252,36 +206,36 @@ The fusion consists of 3 steps:
 ***to predict the long-term data***
 ***to predict the short-term data with the excess time (multiple short-term data points) ***
 ***to fuse the long-term data with the short-term data***
-    
+
 #### To predict the long-term data
-    
+
     In this example , the long-term data is the stock monthly price.
-    
+
     We want to predict the stock monthly price in  04.2015 like in section 2 (simple Gaussian process fitting of stock prices).
-    
+
     Gaussian_Process_fit(Data_monthly):= GP_long_term
-    
+
     while Data_monthly is the monthly prices  from the historical stock prices data between 01.04.2014 and 31-03-2015 , and doesn't contains the monthly price in 04.2015.
-    
+
     GP_long_term.predict(next_month) = pred_price_long
     while pred_price_long is the predicted next month stock price (the predicted monthly stock price in  04.2015)
-    
-#### To predict the short-term data with the excess time
+
+#### To predict the short-term data with the forward window
     In this example , the short-term data is the stock daily prices.
 
-    we do the similar thing like the last step, but the difference is that there is a new parameter , excess_time.
-    
+    we do the similar thing like the last step, but the difference is that there is a new parameter , forward_window.
+
     The purpose of this example is to predict a stock monthly price in 04.2015.
     And we have known , the stock monthly price in 04.2015 is equal to the stock daily price on 30.04.2015 .
     There are 29 data points between 01.04.2015 and 29.04.2015.
     Traditional ,  we can predict the stock daily price on 30.04.2015 with the historical stock prices data between 01.04.2014 and 31-03-2015 and these 29 data points .
-    
+
     But in this example , we are not going to directly predict the stock daily price on 30.04.2015 with the historical stock prices data and these 29 data points.
     We just want to predict some stock daily prices between 01.04.2015 and 29.04.2015.
     These predicted stock daily prices and the predicted stock monthly prices from the last step , are fused to make a better predicted stock monthly prices.
-    
-    excess_time means the time interval size of these data points.
-    For example , let excess_time =5 , 
+
+    forward_window means the time interval size of these data points.
+    For example , let forward_window =5 ,
     It means we need to predict the stock daily prices between  [01.04.2015 ,05.04.2015]
 
     Here is an example how to predict a stock daily price on 03.04.2015
@@ -298,14 +252,14 @@ The fusion consists of 3 steps:
     The  short-term data is the predicted stock daily prices  between [01.04.2015 ,05.04.2015].
 
     We are trying to finding a mapping_function , which generate a better predicted stock monthly price in 04.2015 by the long-term data and the short-term data.
-    
+
     mapping_function( the long-term data, the short-term data)=a better long-term data
-    
+
     Here ,a better long-term data is the fused predicted stock monthly price in 04.2015.
-    
+
     The mapping_function now support :  multiple linear regression.
     A linear regression model assumes that the relationship between the dependent variable y and the vector of regressors x is linear.
-    
+
    The predicted stock monthly price and the predicted stock daily prices are regarded as the vector of regressors.
    The actual stock monthly price is the dependent variable y.
    We try to fit a suitablt multiple linear regression model to fuse the  long-term data with the short-term data.
@@ -313,9 +267,9 @@ The fusion consists of 3 steps:
 
 
 #### Experiment2-multiple short-term data points (see:Tutorial_notebook/Experiment2.ipynb)
-    In this Experiment , we test how the excess_time can improve the performance of the prediction , while using Gaussian process fusion for stock prices with multiple short-term data points.
+    In this Experiment , we test how the forward_window can improve the performance of the prediction , while using Gaussian process fusion for stock prices with multiple short-term data points.
     The fusion method is based on multiple linear regression.
-    
+
 
     data set:
         long_term_MSFT.csv : the data set about MSFT stock monthly price between 2007-01-01 and  2015-02-01 .
@@ -325,415 +279,136 @@ The fusion consists of 3 steps:
         start_time= "01-02-2007 "
         predict_begin="-01-02-2011"
         end_time="01-02-2015"
-        excess_time=[1,5,10,15,20,25]
-        we want to predict the MSFT monthly price from  predict_begin  to end_time every month with different excess_time.
-        
+        forward_window=[1,5,10,15,20,25]
+        we want to predict the MSFT monthly price from  predict_begin  to end_time every month with different forward_window.
+
             The actual long term data : the actual monthly prices that we  want to predicted in step1 and step 3.
-            The actual short-term data : the actuial daily prices that we have predicted .in step 2.
-        
+            The actual short-term data : the actuial daily prices that we have predicted in step 2.
+
         step1: to predict the long-term data
-            the long-term data : The predicted monthly price 
-            
-        step2: to predict the short-term data with the excess time (multiple short-term data points) 
-            the short-term data: The predicted daily prices   (data size = excess_time)
-        
+            the long-term data : The predicted monthly price
+
+        step2: to predict the short-term data with the excess time (multiple short-term data points)
+            the short-term data: The predicted daily prices   (data size = forward_window)
+
         step3: to fuse the long-term data with the short-term data , and to generate the fused data.
             let X=[the long-term data,the short-term data] ,Y^*=[the fused long term data]
             Y^*=multiple linear regression(X)
-            
+
             Let Y=[the actual long term data],
             Add X and Y into the training data set to fit multiple linear regression.
 
-        
+
         calculate the errors.
-        
-        error of fusion: 
+
+        error of fusion:
         abs(the fused long term data - the actual long term data)
-        
+
         error of long_term prediction:
         abs(the long-term data - the actual long term data)
-        
+
         error of short_term prediction:
         abs(the short term data[-1] - the actual long term data)
-        
+
         (importance: the short term data[-1]  is the last one data point from these predicted daily prices )
-        
-    result:
-        excess_time: 1
-        averaeg error of fusion :  2.2633542474930106
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.800405689273728
-        excess_time: 2
-        averaeg error of fusion :  1.7623409891225517
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7604206826167696
-        excess_time: 3
-        averaeg error of fusion :  2.224713001609339
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7361150862422348
-        excess_time: 4
-        averaeg error of fusion :  2.209538282918915
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7584477296513634
-        excess_time: 5
-        averaeg error of fusion :  2.584170370922463
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7535784678809212
-        excess_time: 6
-        averaeg error of fusion :  2.317553621482765
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7178692133690583
-        excess_time: 7
-        averaeg error of fusion :  2.4361812130906535
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.71535640393976
-        excess_time: 8
-        averaeg error of fusion :  2.439227831186964
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.727133856443261
-        excess_time: 9
-        averaeg error of fusion :  2.9807151990405423
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7089212219386687
-        excess_time: 10
-        averaeg error of fusion :  4.154039185176938
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.6710203537830175
-        excess_time: 11
-        averaeg error of fusion :  3.069697808414368
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.6045715304283281
-        excess_time: 12
-        averaeg error of fusion :  2.9885164447120816
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5550625199695944
-        excess_time: 13
-        averaeg error of fusion :  2.3794704153594437
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5400260195396507
-        excess_time: 14
-        averaeg error of fusion :  2.5925792769042686
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5187936851227872
-        excess_time: 15
-        averaeg error of fusion :  2.7597976728078795
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5036295792440642
-        excess_time: 16
-        averaeg error of fusion :  2.7277243214187554
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.4407097183270354
-        excess_time: 17
-        averaeg error of fusion :  3.226424110526183
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.4098666344361084
-        excess_time: 18
-        averaeg error of fusion :  2.814575948861405
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3597923500567415
-        excess_time: 19
-        averaeg error of fusion :  2.7342980446031424
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3609125544872713
-        excess_time: 20
-        averaeg error of fusion :  2.639943197278022
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3176454569412743
-        excess_time: 21
-        averaeg error of fusion :  2.4987394366505686
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.330498880146528
-        excess_time: 22
-        averaeg error of fusion :  2.3820573888349554
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3024381585712326
-        excess_time: 23
-        averaeg error of fusion :  2.644972222820885
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.2611602860252942
-        excess_time: 24
-        averaeg error of fusion :  2.377108661587745
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.2162782394630864
+
+    result: see:  Tutorial_notebook/ex2_multiple_short_term.txt
+
   ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex2_multi.png)
 
-As we can see ,  average error of short_term prediction is decreasing with the excess_time increasing .While excess_time >=15 ,  average error of short_term prediction is smaller than   average error of long_term prediction.
-It seems that excess_time can really decrease the prediction error.
+As we can see ,  average error of short_term prediction is decreasing with the forward_window increasing .While forward_window >=15 ,  average error of short_term prediction is smaller than   average error of long_term prediction.
+It seems that forward_window can really decrease the prediction error.
 
 The change of the averaeg error of fusion is different from the average error of short_term prediction.
-The averaeg error of fusion  increase into  5.639578695638063 at first , and then decrease into  2.9044778192285734. 
+The averaeg error of fusion  increase into  5.639578695638063 at first , and then decrease into  2.9044778192285734.
 Maybe the number of variable in the multiple linear regression.is too larger.
 
 
 
 
-# 3.2 fusion with  the excess time (single short-term data point)
+# 3.2 fusion with  forward window (single short-term data point)
 ##### Example:
-According to section 3.1 , we can see the error of  fusion is not enough good. 
-This section , we test a modified version,a fusion with the excess time and a single short-term data point.
+    According to section 3.1 , we can see the error of  fusion is not enough good.
+    This section , we test a modified version,a fusion with the excess time and a single short-term data point.
 
-We do a similar thing like in section 3.1 , 
-But we  modify step 2 and step 3
-    
+    We do a similar thing like in section 3.1 ,
+    But we  modify step 2 and step 3
+
 #### To predict the short-term data with the excess time (single short-term data point)
     we do the similar thing like in section 3.1.
-    
+
     The purpose is to predict a stock monthly price in 04.2015.
-  
+
     The only difference is that We predict just one stock daily price between 01.04.2015 and 29.04.2015.
- 
-    For example , let excess_time =5 , 
+
+    For example , let forward_window =5 ,
     It means we need to predict the stock daily price in  06.04.2015.
-    let excess_time =15 , 
+    let forward_window =15 ,
     It means we need to predict the stock daily price in  16.04.2015.
 
 
 #### Experiment2-singleshort-term data points (see:Tutorial_notebook/Experiment2.ipynb)
-    In this Experiment , we test how the excess_time can improve the performance of the prediction , while using Gaussian process fusion for stock prices with multiple short-term data points.
+    In this Experiment , we test how the forward_window can improve the performance of the prediction , while using Gaussian process fusion for stock prices with multiple short-term data points.
     The fusion method is based on multiple linear regression.
-    
 
-    data set:
+
+##### data set:
         long_term_MSFT.csv : the data set about MSFT stock monthly price between 2007-01-01 and  2015-02-01 .
         short_term_MSFT.csv : the data set about MSFT stock daily price between 2007-01-01 and  2015-02-01 .
 
-    Process:
+##### Process:
         start_time= "01-02-2007 "
         predict_begin="-01-02-2011"
         end_time="01-02-2015"
-        excess_time=[1,5,10,15,20,25]
-        we want to predict the MSFT monthly price from  predict_begin  to end_time every month with different excess_time.
-        
+        forward_window=[1,5,10,15,20,25]
+        we want to predict the MSFT monthly price from  predict_begin  to end_time every month with different forward_window.
+
             The actual long term data : the actual monthly prices that we  want to predicted in step1 and step 3.
             The actual short-term data : the actuial daily prices that we have predicted .in step 2.
-        
+
         step1: to predict the long-term data
-            the long-term data : The predicted monthly price 
-            
-        step2: to predict the short-term data with the excess time (multiple short-term data points) 
-            the short-term data: The predicted daily prices   (data size = excess_time)
-        
+            the long-term data : The predicted monthly price
+
+        step2: to predict the short-term data with the excess time (multiple short-term data points)
+            the short-term data: The predicted daily prices   (data size = forward_window)
+
         step3: to fuse the long-term data with the short-term data , and to generate the fused data.
             let X=[the long-term data,the short-term data] ,Y^*=[the fused long term data]
             Y^*=multiple linear regression(X)
-            
+
             Let Y=[the actual long term data],
             Add X and Y into the training data set to fit multiple linear regression.
 
-        
+
         calculate the errors.
-        
-        error of fusion: 
+
+        error of fusion:
         abs(the fused long term data - the actual long term data)
-        
+
         error of long_term prediction:
         abs(the long-term data - the actual long term data)
-        
+
         error of short_term prediction:
         abs(the short term data[-1] - the actual long term data)
-        
+
         (importance: the short term data[-1]  is the last one data point from these predicted daily prices )
 
-    result:
-        excess_time: 1
-        averaeg error of fusion : 2.2633542474930106
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.800405689273728
-        excess_time: 2
-        averaeg error of fusion : 2.0538267435098283
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7604206826167696
-        excess_time: 3
-        averaeg error of fusion : 2.0657732977142347
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7361150862422348
-        excess_time: 4
-        averaeg error of fusion : 1.9380125292312358
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7584477296513634
-        excess_time: 5
-        averaeg error of fusion : 2.530355976511812
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7535784678809212
-        excess_time: 6
-        averaeg error of fusion : 2.107650285346243
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7178692133690583
-        excess_time: 7
-        averaeg error of fusion : 1.9236082723719066
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.71535640393976
-        excess_time: 8
-        averaeg error of fusion : 3.110313990207486
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.727133856443261
-        excess_time: 9
-        averaeg error of fusion : 2.401597208786539
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.7089212219386687
-        excess_time: 10
-        averaeg error of fusion : 1.8950878204451804
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.6710203537830175
-        excess_time: 11
-        averaeg error of fusion : 1.7671055054522293
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.6045715304283281
-        excess_time: 12
-        averaeg error of fusion : 1.7273300602650914
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5550625199695944
-        excess_time: 13
-        averaeg error of fusion : 1.6183166621918184
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5400260195396507
-        excess_time: 14
-        averaeg error of fusion : 1.67812756186457
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5187936851227872
-        excess_time: 15
-        averaeg error of fusion : 1.7592012604289702
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.5036295792440642
-        excess_time: 16
-        averaeg error of fusion : 2.854560064574999
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.4407097183270354
-        excess_time: 17
-        averaeg error of fusion : 6.302453963087881
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.4098666344361084
-        excess_time: 18
-        averaeg error of fusion : 1.8039368018741135
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3597923500567415
-        excess_time: 19
-        averaeg error of fusion : 1.5972768288885204
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3609125544872713
-        excess_time: 20
-        averaeg error of fusion : 1.5053580533507664
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3176454569412743
-        excess_time: 21
-        averaeg error of fusion : 1.527891011611705
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.330498880146528
-        excess_time: 22
-        averaeg error of fusion : 1.484947299554301
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.3024381585712326
-        excess_time: 23
-        averaeg error of fusion : 1.3944713612485293
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.2611602860252942
-        excess_time: 24
-        averaeg error of fusion : 1.279964799196538
-        average error of long_term prediction :  1.549716047855353
-        average error of short_term prediction :  1.2162782394630864
+##### result:
+     see: Tutorial_notebook/ex2_single_short_term.txt
+
 
   ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex2_single.png)
-###3.2 simple Gaussian process fusion without any correction term
-      we try to predict the long-term price directly using short-term GP  and then compare them with the long-term GP.
-            Example (in formulas):
 
-                our assumption :
-                                GP_short_term.predict(X_short_term)  =GP_long_term.predict(X_long_term)
-                                GP_long_term.predict(X_long_term)=Price_long
-
-                in real-life situation :
-                                GP_short_term.predict(X_short_term)  + Error =GP_long_term.predict(X_long_term)
-                                GP_long_term.predict(X_long_term)+Error =Price_long
-
-                hence : Price_long - GP_short_term.predict(X_short_term)   =error_1
-                        Price_long - GP_long_term.predict(X_long_term)= error_2
-
-                our goal (one reasonable goal) :
-                    we want to know the relationship between abs(error_1) and abs(error_2).
-
-
-          Experiment3:
-                we want to know the relationship between abs(error_1) and abs(error_2).
-
-                data set:
-                    long_1month_term_MSFT.csv : the data set about MSFT stock monthly price from 1995-01-22 to  2015-01-22.
-                    short_1day_term_MSFT.csv : the data set about MSFT stock daily price from 1995-01-22 to  2015-01-22.
+As we can see the figure of the result ,average error of short_term is larger than average error of long_term before forward_window = 13 .
+After then, average error of short_term is smaller than average error of long_term.
+It means that the forward_window can improve the performance of the prediction by reduction of the prediction length.
+There is similar behavior about averaeg error of fusion .
+But averaeg error of fusion always be larger than average error of short_term.
+It seems that the fusion algorithm can not work very well on the prediction of stock prices.
 
 
 
-
-                Process:
-                    start_time="2008-01-01 00:00:00"
-                    end_time="2015-01-01 00:00:00"
-                    we predict the MSFT monthly price from 2008-01-01 to 2015-01-01 using simple Gaussian process fusion with the correction term.
-
-                    1.predict MSFT monthly price on 2008-02-01 using  data set 1 .
-                    data set 1 is from  2008-01-01 to 2008-01-31 .
-                    2.predict MSFT monthly price on 2008-03-01 using  data set 2 .
-                    data set 2 is from  2008-01-01 to 2008-02-29.
-                    3.predict MSFT monthly price on 2008-04-01 using  data set 3.
-                    data set 3 is from  2008-01-01 to 2008-03-31.
-                    ...........
-                    n. predict MSFT monthly price on 2008-04-01 using  data set n.
-                    data set n is from  2008-01-01 to 2014-12-31.
-
-
-
-
-                result:
-                    According to our small data set test, abs(error_1) is really smaller than abs(error_2)
-                    np.mean(abs(error_1))=0.002055978
-                    np.mean(abs(error_2))=0.055280711
-
-
-                    see :
-                    test_result/Experiment3_pred_price_error_fusion_without_correction.csv
-                    test_result/Experiment3_pred_price_long_term.csv
-
-
-    summary: Using non correction term maybe better than using a correction term.
-
-             Experiment3A:
-                we want to evaluate the parameter excess_time.
-                (The rest of the setting is same to Experiment3 . Hence , there is not any correction term)
-                data set:
-                    long_1month_term_MSFT.csv : the data set about MSFT stock monthly price from 1995-01-22 to  2015-01-22.
-                    short_1day_term_MSFT.csv : the data set about MSFT stock daily price from 1995-01-22 to  2015-01-22.
-
-                Process:
-                    start_time="2008-01-01 00:00:00"
-                    end_time="2010-01-01 00:00:00"
-                    we predict the MSFT monthly price from 2008-01-01 to 2015-01-01 using simple Gaussian process fusion without any correction term.
-
-                    we predict the monthly price  with a increasing fitting length like last experiment but using different excess_time.
-
-                    excess_time=[0,1,2,3,4,5,6,7,8,9]
-
-                    Price_long - GP_short_term.predict(X_short_term)   =error_1
-                    Price_long - GP_long_term.predict(X_long_term)= error_2
-
-
-
-                result:
-                excess_time=[0,1,2,3,4,5,6,7,8,9]
-                average error_1:	0.063465226	, 0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583
-                average error_2:    0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284
-
-                Hence, average  error_1 < average error_2.
-                But very starnge. Why a new excess_time ccan not change the error?
-                One possible reason that fitting_length is very large .
-                Hence, adding new element by adding excess_time can not change the result.
-
-
-                    see :
-                    test_result/Experiment3A_price_fusion_different_excess_time.csv
-                    test_result/Experiment3A_price_fusion_different_excess_time.xlsx
-
-
-
-
-
-#4.The portfolio generation(portfolio data set generation)  based on standard / customized expected return ,risk model and objected function.
+# 4.The portfolio generation based on standard / customized expected return ,risk model and objected function.
     The portfolio generation is based on PyPortfolioOpt.
     (https://pyportfolioopt.readthedocs.io/en/latest/UserGuide.html)
     The portfolios generation is focusing on mean-variance optimization (MVO).
@@ -776,71 +451,73 @@ But we  modify step 2 and step 3
          the portfolio:   EfficientSemivariance
          the objective_functions: L2 regularisation
 
+    For example,
+        we want to generate portfolio for stock A and stock B in 06.2010 according to the historical monthly returns .
 
-    Data Generation:
-    long-term portfolios:
-        input :
-            Monthly price Data of 34 different stocks  from 2001-01-19 to 2013-01-03 ( daily price and monthly price)
-        output:
-             long-term portfolios (from 2001-01-19 to 2013-01-03)  size:134
+        portfolio_generate(Data_A ,Data_B)= portfolio_AB   .
+        while :
+        Data_A is the historical monthly returns of stock A before 06.2010 .（except the return in 06.2010）
+         Data_B is the historical monthly returns of stock B before 06.2010 .（except the return in 06.2010）
+        portfolio_AB is the portfolio in 06.2010.
+        We can calculate the profit of portfolio_AB according to the historical monthly return in 06.2010.
 
-    short-term portfolios:
-        input :
-            Daily price Data of 34 different stocks  from 2001-01-19 to 2013-01-03 ( daily price and monthly price)
-        output:
-            short-term portfolios (from 2001-01-19 to 2013-01-03)  size:3006
+# 5. Gaussian Proccess fitting of asset allocation
+In this step , we want to :
+    1. to fit Gaussian Process for each asset's historical allocation
+    2. to predict the corresponding allocation next time point.
+    3. to prove that the predicted allocation is better than the traditional allocation (the profit of the predicted allocation is better than the profit of the traditional allocation )
 
-    important note:
-        At least now, why don't we use S&P 50 . Because they have different startup years.
-        Some stock price data begin from 01-01-1990.
-        But some maybe begin from 01-01-2006.
-        Hence, we just select  the stocks whose the startup year is enough early.
+The model fitting support: GPR (gaussian process regression) , VGP(Variational Gaussian Process), SGPR (Sparse Gaussian Process Regression )
 
 
 
-#5.Simple Gaussian Proccess fitting of asset allocation
-    we want to :
-            to fit Gaussian Process for each asset using their historical position
-            to predict the corresponding position(allocation) next time point.
-            to prove that the predicted position is better than the original position
+    For example  (in formulas):
+        we are going to optimize the allocation of stock a,b
+        Suppose:
+        The historical returns of stock a and b at time point i ,is Ri=(Ri_a , Ri_b).
+        Portfolio is  Pi=(pi_a,pi_b)
+        we can generate Pi from [R0,R1.....,R(i-1)].
+        And then we can calculate the profit of Pi with Ri.
+        Pi is the best portfolio for [R0,R1.....,R(i-1)] at time point i, while Ri is unknown at time point i.
+        Ri is only konwn at time point (i+1) or later.
+        hence , P(i+1) is the best portfolio for [R0,R1.....,Ri] at time point i+1.
+        If we can predict  P(i+1) at time point t , we can knwon the best portfolio at time point i for [R0,R1.....,Ri].
+
+        while :
+         i is timestamp,
+         pi_a is the position of asset a at time point i.
+         pi_b is the position of asset b at time point i.
+
+        suppose: Pi is generated by
 
 
-             For example  (in formulas):
-                we are going to optimize the allocation of stock a,b,c.
-                Portfolio:   Pi=(pi_a,pi_b,pi_c)
-                while :
-                 i is timestamp,
-                 pi_a is the position of asset a at time point i.
-                 pi_b is the position of asset b at time point i.
-                 pi_c is the position of asset c at time point i.
+        Let us assumpt : i=1,2,3,4
 
-                Let us assumpt : i=1,2,3,4
-                Data_a=(p1_a,p2_a,p3_a)
-                Data_b=(p1_b,p2_b,p3_b)
-                Data_c=(p1_c,p2_c,p3_c)
 
-                GP_a=Gaussian_Process_fit(Data_a)
-                GP_b=Gaussian_Process_fit(Data_b)
-                GP_a=Gaussian_Process_fit(Data_c)
+        Data_a=(p1_a,p2_a,p3_a)
+        Data_b=(p1_b,p2_b,p3_b)
 
-                GP_a.predict(i=4)=pred_p4_a
-                GP_b.predict(i=4)=pred_p4_b
-                GP_c.predict(i=4)=pred_p4_c
 
-                P4=(p4_a,p4_b,p4_b)
-                pred_P4=(pred_p4_a,pred_p4_b,pred_p4_b)
+        GP_a=Gaussian_Process_fit(Data_a)
+        GP_b=Gaussian_Process_fit(Data_b)
 
-                calculate_profit_by_portfolio(P4)=profit
-                calculate_profit_by_portfolio(pred_P4)=pred_profit
 
-                loss(score)=profit-pred_profit
+        GP_a.predict(i=4)=pred_p4_a
+        GP_b.predict(i=4)=pred_p4_b
 
-                The ideal experiment result is: loss>0
-                loss>0  means that our predicted portfolio is better than the original portfolio
+        pred_P4=(pred_p4_a,pred_p4_b)
 
-                The real-life  experiment result  is :
-                sometimes :loss>0
-                sometimes :loss<0
+        calculate_profit_by_portfolio(P3)=profit
+        calculate_profit_by_portfolio(pred_P4)=pred_profit
+
+        loss(score)=pred_profit - profit
+
+        The ideal experiment result is: loss>0
+        loss>0  means that our predicted portfolio is better than the original portfolio
+
+        The real-life  experiment result  is :
+        sometimes :loss>0
+        sometimes :loss<0
 
     Note:  In our research , we just focus on long position. hence , pi_x >=0 .
            But pred_pi_x maybe smaller than 0 .
@@ -849,147 +526,143 @@ But we  modify step 2 and step 3
            But pred_p4_a+pred_p4_b+pred_p4_b  always not be 1 .
            Hence , we need to normalize (pred_p4_a,pred_p4_b,pred_p4_b).
 
+    There are still the parameters : fitting_windows  and pred_length
 
 
-     Experiment4:
+#### Experiment3-pred_lengths(see:Tutorial_notebook/Experiment3.ipynb):
+    goal : test the performance with different pred_lengths for asset allocation.
+
+##### data set:
+    monthly stock prices of three stocks (from "2008-01-01" to "2018-12-01")
+    stock_id_list=["AAPL","NVDA","AMD"]
+
+
+##### Process:
+    0. let pred_length = x
+    1. generate the historical return R according the monthly stock prices.
+    2. generate prtfolio Pi according to R at time point i accroding to the monthly stock prices ,which are before time point i.
+    3. predict portfolio [P(i+1),P(i+2),...,P(i+x)] according [P1,P2,....,Pi] by GPR
+    4. compute the profit of Pi  Profit_Pi and the profit of the predicted p(i+1) , pred_Profit_Pi according R ,Pi and the predicted P(i+1)
+    5. compute the loss score,
+
+     loss score = pred_Profit_Pi - Profit_Pi
+    loss score > 0 means that predicted P(i+1) is better then Profit_Pi.
+
+    average predicted profit is the average pred_Profit_Pi at each time point
+    average actual profit is the average Profit_Pi at each time point
+   average score is the average score at each time point
+    cumulative predicted profit is the cumulative result of pred_Profit_Pi.
+    cumulative actual profit is the cumulative result of Profit_Pi.
+     (here cumulative profit means : pred_Profit_P1 * pred_Profit_P2 * .....*pred_Profit_Pi)
+    average score of the cumulative result= cumulative predicted profit  - cumulative actual profit
+##### Result:
+    see : Tutorial_notebook/ex3_pred_lengths.txt
+
+
+  ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex3_pred_length.png)
+
+As we can see, the best average score, 0.04480896356552977,  appears in pred_length=1.
+The average score is decreasing into around 0.015 in pred_length=15. and is increasing back to 0.03 in pred_length=15.
+This maybe caused by the normalization of each predicted portfolio , to make sure that the sum of all positions is equal to 1 .
+The average actual profit and the cumulative predicted profit are outperfomace than the actual profit.
+At least until now , it seems keeping the pred_length shortest is the best choice.
+And also , it shows that the to predict the portfolio using GPR can really improve the performance (profit)
+
+
+
+
+#### Experiment3- fitting_windows(see:Tutorial_notebook/Experiment3.ipynb):
         data set:
-            long-term portfolios of 34 stocks (from 2001-01-19 to 2013-01-03)  size:134
-
-        process:
-
-            start=01.02.2006
-            end=01-01-2011
-            P1 is the long-term portfolios in 01.02.2006
-            P2 is the long-term portfolios in 01.02.2006
-            ....
-            Pn is the long-term portfolios in 01-01-2011
-
-            we need to build up independent GPs for each assets. (totally 34 GPs)
-
-            The Gaussian process fitting use non-fixed fitting-length (the increasing fitting-length)
-            The pred_Pi is generated by the predictions result from 34 GPs.
-            And then we need to compute the profit ,pred_profit and loss.
-
-            profit : how much money does the portfolio can earn? (in %)
-            pred_profit : how much money does the predicted portfolio can earn? (in %)
-            loss=pred_profit-profit
-
-        result:
-
-                average profit: 0.006852366
-                average pred_profit: 0.001048108
-                average loss: -0.005804258
-
-        see: test_result/Experiment4_long_term_GP_loss.csv
+        monthly stock prices of three stocks (from "2008-01-01" to "2018-12-01")
+        stock_id_list=["AAPL","NVDA","AMD"]
 
 
-     Experiment5:
-            data set:
-                short-term portfolios of 34 stocks (from 2001-01-19 to 2013-01-03)       size:3006
+##### process:
+            0. let fitting_windows = x and pred_length=1
+            1. generate the historical return R according the monthly stock prices.
+            2. generate prtfolio Pi according to R at time point i
+            3. predict portfolio P(i+1) according [P1,P2,....,Pi]
+            4. compute the profit of Pi  Profit_Pi and the profit of the predicted p(i+1) , pred_Profit_Pi according R ,Pi and the predicted P(i+1)
+            5. compute the loss ,
 
-            process:
+##### result:
+    see:Tutorial_notebook/ex3_fitting_windows.txt
 
-                start=01.02.2006
-                end=2006-04-18
-                P1 is the short-term portfolios in 01.02.2006
-                P2 is the short-term portfolios in 02.02.2006
-                ....
-                Pn is the short-term portfolios in 01-04-2006
+  ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex3_fitting_windows.png)
 
-                we build up independent GPs for each assets. (totally 34 GPs)
+As we can see, the experiment result is pretty strange.
+most of the average scores  is smaller than zero, except the average score in  fitting_windows is = 3 .  It seems  that the predicted portfolio can not outperform than the actual portfolio.
 
-                The Gaussian process fitting use non-fixed fitting length (the increasing length)
-                The pred_Pi is composed of the prediction results from 34 GPs.
+Therefore ,  some larger fitting_windows are tested.
 
-                And then we compute the profit ,pred_profit and loss.
+![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex3_fitting_windows_2.png)
 
-                profit : how much money does the portfolio Pi can earn? (in %)
+As we can see , the change of loss score is not regular and the loss score  is going up and down.And it never be large than 0.
+It looks that it can not improve the profit with the predicted the portfolio .
+Now there is a question ,why the loss score is pretty good in Experiment3-pred_lengths , but very bad in Experiment3- fitting_windows.
 
-                pred_profit : how much money does the predicted portfolio pred_Pi can earn? (in %)
-
-                loss=pred_profit-profit
-
-            result:
-                average profit: 0.000557206
-                average pred_profit: 0.000284955
-                average loss: -0.000272251
-
-            see:test_result/Experiment5_short_term_GP_loss.csv
-
-    Summarily, The simple GP prediction can just offer a negative effect.
+Hence, we need some modification.
 
 
-#6. Simple Gaussian Proccess fusion of  asset allocations
-
-     can predict long-term stock price using short-term stock price.
-    (To fuse short-term stock price into long-term stock price)
-
-            For example (in formulas):
-
-            our assumption :
-                            GP_short_term.predict(X_short_term) +correction_term =GP_long_term.predict(X_long_term)
-                            GP_long_term.predict(X_long_term)=Price_long
-
-            in real-life situation :
-                            GP_short_term.predict(X_short_term) +correction_term + Error =GP_long_term.predict(X_long_term)
-                            GP_long_term.predict(X_long_term)+Error =Price_long
-
-            hence : Price_long - GP_short_term.predict(X_short_term) -correction_term  =error_1
-                    Price_long - GP_long_term.predict(X_long_term)=error_2
-
-            our goal (one reasonable goal) :
-                to proof : abs(error_1) <abs(error_2)
-
-            Here , correction_term is a customized term ,
-            options of correction_term includes :
-                            1.the mean of the historical errors
-                            2. a constant
+# 6. Gaussian Proccess fitting of asset allocation Version 2
+In this step , we do a similar thing like last step. But a littl difference is that we use , we don't use predicted  P(i+1) at time point i , but at time point i+1. We don't predict at each time point but each pred_lendth-th time points.
+And we test the performance again.
 
 
 
-            Experiment6:
-            To test the performance of simple Gaussian proccess fusion of  asset allocation between long-term and short-term , while correction_term=0
-            Hence, we don't use any correction_term
-            data set:
-                short-term portfolios of 34 stocks (from 2001-01-19 to 2013-01-03)  size:3006
-                long-term portfolios of 34 stocks (from 2001-01-19 to 2013-01-03)  size:134
-            process:
 
-                start=01.01.2006
-                end=01.01.2009
-                excess_time=15
+    For example  (in formulas):
+    Let i is time point.
+    0. let pred_length = x ,fittingLlength=k
 
-                P1 is the short-term portfolios in 01.02.2006
-                P2 is the long-term portfolios in 02.02.2006
-                ....
-                Pn is the long-term portfolios in 01.01.2009
+    1. generate the historical return R according the monthly stock prices.
+    (R=(R1,R2,....,Ri))
 
-                we build up independent GPs for each assets. (totally 34 GPs)
-
-                The Gaussian process fitting use non-fixed fitting-length (the increasing fitting-length)
-                The pred_Pi are generated by the predictions result from 34 GPs.
-
-                And then we can compute the profit ,pred_profit and loss.
-
-                profit : how much money does the portfolio can earn? (in %)
-                pred_profit : how much money does the long-term predicted portfolio can earn? (in %)
-                fusion_profit: how much money does the fusion predicted portfolio can earn? (in %)
-
-                fusion_loss=fusion_profit - profit
-                pred_loss=pred_profit - profit
-
-            result:
-                average fusion_loss=-0.002383809
-                average pred_loss=-0.004700145
-
-                average fusion_loss <  average pred_loss
-                As we can see , simple fusion is better than the directly GP prediction.
+    2. generate prtfolio Pi according to returns (R(i-k)...,R(i-2),R(i-1)) at time point i
+    3. predict portfolio [P(i+1),P(i+2),...,P(i+x)] according [P1,P2,....,Pi] by GPR
+    4. compute the profit of P(i+1)  Profit_P(i+1) and the profit of the predicted p(i+1) , pred_Profit_P(i+1) according R.
+    5. compute the loss score,
+    6.repeat step.2 , but begin from  P(i+x+1)
 
 
 
-            see:
-                Experiment6_portfolio_fusion_result.csv
+#### Experiment4(see:Tutorial_notebook/Experiment4.ipynb):
+    goal : test the performance with different pred_lengths and different fitting_lengths for asset allocation.
 
-    Hence , we can say ,simple fusion can reduce the error of GP prediction.
+##### data set:
+    monthly stock prices of three stocks (from "2008-01-01" to "2018-12-01")
+    stock_id_list=["AAPL","NVDA","AMD"]
+
+
+##### Process:
+    0. let pred_length = x ,fittingLlength=k
+    1. generate the historical return R according the monthly stock prices.
+    2. generate prtfolio Pi according to R at time point i accroding to the monthly stock prices ,which are before time point i.
+    3. predict portfolio [P(i+1),P(i+2),...,P(i+x)] according [P(i-k),P(i-k-1),....,Pi] by GPR
+    4. compute the profit of P(i+1),P(i+2),...,P(i+x) , Profit , and the profit of the predicted P(i+1),P(i+2),...,P(i+x) , pred_Profit , according R
+
+    5. compute the loss score,
+
+     loss score = pred_Profit_Pi - Profit_Pi
+    loss score > 0 means that predicted P(i+1) is better then Profit_Pi.
+
+    average predicted profit is the average pred_Profit_Pi at each time point
+    average actual profit is the average Profit_Pi at each time point
+   average score is the average score at each time point
+    cumulative predicted profit is the cumulative result of pred_Profit_Pi.
+    cumulative actual profit is the cumulative result of Profit_Pi.
+     (here cumulative profit means : pred_Profit_P1 * pred_Profit_P2 * .....*pred_Profit_Pi)
+    average score of the cumulative result= cumulative predicted profit  - cumulative actual profit
+##### Result:
+    see : Tutorial_notebook/ex4_pred_lengths.txt
+  ![Image text](https://github.com/ZhangArcher/MT_github/blob/linear_regression_in_fusion/Tutorial_notebook/ex3_fitting_windows.png)
+
+As we can see, in most of situations, the average loss scores is decreasing     ,while the pred_length is larger than  3 or 4 , or smaler than 2.
+hence ,  the smaller pred_length are used in the following research.
+It is still uncertain that the relationship between the prediction and the fitting_lengths.
+Just predicting the protfoilio can not outperform than the actual portfolio in most of situation.
+
+
+
 
 

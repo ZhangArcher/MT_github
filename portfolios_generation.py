@@ -510,9 +510,9 @@ class Portfolios:
 
 
 if __name__ == '__main__':
-    path_dataset = "liyao/long"
-    start_time = "2016-06-01 00:00:00"
-    end_time = "2023-08-01 00:00:00"
+    path_dataset = "Tutorial_notebook/demo_data/ex3/long"
+    start_time = "2012-06-01 00:00:00"
+    end_time = "2015-06-01 00:00:00"
 
     ppp = Portfolios(path_dataset)
     #ppp.generate_dataframe_by_time_interval_string(start=start_time, end=end_time)
@@ -524,6 +524,8 @@ if __name__ == '__main__':
     historical_return=ppp.generate_historical_returns()
     portfolio= ppp.generate_historical_portfolios(start=start,end=end,forward_length=10)
     profit = ppp.compute_portfolios_profit()
+
+    print("assdsd")
 
     name="long"
     pre="liyao/"

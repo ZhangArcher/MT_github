@@ -46,7 +46,7 @@ if __name__ == '__main__':
     fusion_price_AAPL = fusion_wrapper_price.fusion_wrapper_price(csv_path_long_term="demo_data/long/AAPL.csv",
                                                               csv_path_short_term="demo_data/short/AAPL.csv")
 
-    X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l=fusion_price_AAPL.fusion_next_price(start=start,end=end,excess_time=15)
+    X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l=fusion_price_AAPL.fusion_next_price(start=start,end=end,forward_window=15)
 
     # X_pred_times is timestamp [2015-02-01]
     # Y_pred_mean is the prediction mean
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     fusion_price_AAPL = fusion_wrapper_price.fusion_wrapper_price(csv_path_long_term="demo_data/long/AAPL.csv",
                                                               csv_path_short_term="demo_data/short/AAPL.csv")
 
-    X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l=fusion_price_AAPL.fusion_next_price(start=start,end=end,excess_time=15)
+    X_time,Y_mean_fusion,Y_pred_mean_l,Y_pred_actual_l,error_fusion,error_l=fusion_price_AAPL.fusion_next_price(start=start,end=end,forward_window=15)
 
     # X_pred_times is timestamp [2015-02-01]
     # Y_pred_mean is the prediction mean

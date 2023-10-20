@@ -1,0 +1,27 @@
+    fitting_windows is :  2
+    average error of the predicted price is : 1.346718827482427
+    average error of the traditional expected  price is : 1.3241280070896253
+    fitting_windows is :  3
+    average error of the predicted price is : 1.3395735868976804
+    average error of the traditional expected  price is : 1.2678742248020811
+    fitting_windows is :  4
+    average error of the predicted price is : 1.3183825587589235
+    average error of the traditional expected  price is : 1.2624242534745207
+    fitting_windows is :  5
+    average error of the predicted price is : 1.315166334500046
+    average error of the traditional expected  price is : 1.2388227527791802
+    fitting_windows is :  10
+    average error of the predicted price is : 1.4281102401390058
+    average error of the traditional expected  price is : 1.2028422439307493
+    fitting_windows is :  15
+    average error of the predicted price is : 1.4611023723327736
+    average error of the traditional expected  price is : 1.1434098324143742
+    fitting_windows is :  20
+    average error of the predicted price is : 1.406233083068599
+    average error of the traditional expected  price is : 1.1266751674391466
+    fitting_windows is :  25
+    average error of the predicted price is : 1.4493031430717267
+    average error of the traditional expected  price is : 1.1170112536503716
+    fitting_windows is :  30
+    average error of the predicted price is : 1.462305502607272
+    average error of the traditional expected  price is : 1.1089905366202852

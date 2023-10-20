@@ -1,0 +1,119 @@
+pred_length is : 1
+    average predicted profit : -0.07572656771074673
+    average actual profit : -0.09813104949351162
+    average score : 0.04480896356552977
+    cumulative predicted profit : 0.8485468645785066
+    cumulative actual profit : 0.8037379010129768
+    average score of the cumulative result : 0.04480896356552977
+
+    pred_length is : 2
+    average predicted profit : -0.03066077958833454
+    average actual profit : -0.042811566754330316
+    average score : 0.02430157433199155
+    cumulative predicted profit : 0.872993514230143
+    cumulative actual profit : 0.8238440732923985
+    average score of the cumulative result : 0.04914944093774454
+
+    pred_length is : 3
+    average predicted profit : 0.015267912052815828
+    average actual profit : -0.0011024649570430072
+    average score : 0.03274075401971766
+    cumulative predicted profit : 1.0600328903052336
+    cumulative actual profit : 0.9594747401228315
+    average score of the cumulative result : 0.1005581501824021
+
+    pred_length is : 4
+    average predicted profit : 0.02364867931778157
+    average actual profit : 0.010791451693977747
+    average score : 0.02571445524760765
+    cumulative predicted profit : 1.1634729797646355
+    cumulative actual profit : 1.048654466268771
+    average score of the cumulative result : 0.11481851349586458
+
+    pred_length is : 5
+    average predicted profit : 0.05027345332327782
+    average actual profit : 0.03876112528510175
+    average score : 0.02302465607635213
+    cumulative predicted profit : 1.5282742300286978
+    cumulative actual profit : 1.3645927056157166
+    average score of the cumulative result : 0.16368152441298123
+
+    pred_length is : 6
+    average predicted profit : 0.04708854627553585
+    average actual profit : 0.037198396576388876
+    average score : 0.01978029939829395
+    cumulative predicted profit : 1.6235285399725203
+    cumulative actual profit : 1.44478914490554
+    average score of the cumulative result : 0.17873939506698044
+
+    pred_length is : 7
+    average predicted profit : 0.060510094529539135
+    average actual profit : 0.05314611904850634
+    average score : 0.014727950962065573
+    cumulative predicted profit : 2.0814914705147163
+    cumulative actual profit : 1.8748521724599965
+    average score of the cumulative result : 0.2066392980547198
+
+    pred_length is : 8
+    average predicted profit : 0.05822704543580711
+    average actual profit : 0.051344476646516174
+    average score : 0.01376513757858187
+    cumulative predicted profit : 2.2573596063553527
+    cumulative actual profit : 2.020089395229939
+    average score of the cumulative result : 0.2372702111254137
+
+    pred_length is : 9
+    average predicted profit : 0.05399138599927821
+    average actual profit : 0.04733973831731996
+    average score : 0.013303295363916522
+    cumulative predicted profit : 2.3481330497544026
+    cumulative actual profit : 2.0819115310538137
+    average score of the cumulative result : 0.26622151870058897
+
+    pred_length is : 10
+    average predicted profit : 0.05105756135562366
+    average actual profit : 0.04388180570396187
+    average score : 0.014351511303323575
+    cumulative predicted profit : 2.4639107533293236
+    cumulative actual profit : 2.1350436295864657
+    average score of the cumulative result : 0.328867123742858
+
+    pred_length is : 11
+    average predicted profit : 0.061806515253165224
+    average actual profit : 0.04911111985391643
+    average score : 0.025390790798497567
+    cumulative predicted profit : 3.298171490349373
+    cumulative actual profit : 2.5680486740177257
+    average score of the cumulative result : 0.7301228163316473
+
+    pred_length is : 12
+    average predicted profit : 0.06677034847645447
+    average actual profit : 0.05327479382324193
+    average score : 0.02699110930642507
+    cumulative predicted profit : 4.0987862206786785
+    cumulative actual profit : 3.07690858444172
+    average score of the cumulative result : 1.0218776362369586
+
+    pred_length is : 13
+    average predicted profit : 0.060143321304430855
+    average actual profit : 0.04679054304202785
+    average score : 0.026705556524806013
+    cumulative predicted profit : 3.9399090301734967
+    cumulative actual profit : 2.886014306137758
+    average score of the cumulative result : 1.0538947240357386
+
+    pred_length is : 14
+    average predicted profit : 0.0598459005992937
+    average actual profit : 0.044933545491362706
+    average score : 0.02982471021586197
+    cumulative predicted profit : 4.38101676498335
+    cumulative actual profit : 3.0060296574251457
+    average score of the cumulative result : 1.3749871075582045
+
+    pred_length is : 15
+    average predicted profit : 0.05737725202532134
+    average actual profit : 0.042145445022820895
+    average score : 0.030463614005000885
+    cumulative predicted profit : 4.580932828982662
+    cumulative actual profit : 3.024739417256213
+    average score of the cumulative result : 1.5561934117264489

@@ -32,7 +32,7 @@ details:
     Term:
         fitting_length: the data size used to fit a Gaussian Process
         pred_length: prediction length,the length of the future time what we to predict
-        excess_time:  the difference between long-term time point and short-term time point.
+        forward_window:  the difference between long-term time point and short-term time point.
 
     Example (in formulas):
         Let us assumpt :
@@ -107,7 +107,7 @@ details:
         Gaussian_Process_fit(D_long)=GP_long_term
 
         The difference between D1 and D2 is 15 days.
-        Here, excess_time = 15 days
+        Here, forward_window = 15 days
 
         X_short_term:= next day
         X_long_term:= next month
@@ -277,7 +277,7 @@ details:
     summary: Using non correction term maybe better than using a correction term.
 
              Experiment3A:
-                we want to evaluate the parameter excess_time.
+                we want to evaluate the parameter forward_window.
                 (The rest of the setting is same to Experiment3 . Hence , there is not any correction term)
                 data set:
                     long_1month_term_MSFT.csv : the data set about MSFT stock monthly price from 1995-01-22 to  2015-01-22.
@@ -288,9 +288,9 @@ details:
                     end_time="2010-01-01 00:00:00"
                     we predict the MSFT monthly price from 2008-01-01 to 2015-01-01 using simple Gaussian process fusion without any correction term.
 
-                    we predict the monthly price  with a increasing fitting length like last experiment but using different excess_time.
+                    we predict the monthly price  with a increasing fitting length like last experiment but using different forward_window.
 
-                    excess_time=[0,1,2,3,4,5,6,7,8,9]
+                    forward_window=[0,1,2,3,4,5,6,7,8,9]
 
                     Price_long - GP_short_term.predict(X_short_term)   =error_1
                     Price_long - GP_long_term.predict(X_long_term)= error_2
@@ -298,19 +298,19 @@ details:
 
 
                 result:
-                excess_time=[0,1,2,3,4,5,6,7,8,9]
+                forward_window=[0,1,2,3,4,5,6,7,8,9]
                 average error_1:	0.063465226	, 0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583	,0.001713583
                 average error_2:    0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284	,0.063920284
 
                 Hence, average  error_1 < average error_2.
-                But very starnge. Why a new excess_time ccan not change the error?
+                But very starnge. Why a new forward_window ccan not change the error?
                 One possible reason that fitting_length is very large .
-                Hence, adding new element by adding excess_time can not change the result.
+                Hence, adding new element by adding forward_window can not change the result.
 
 
                     see :
-                    test_result/Experiment3A_price_fusion_different_excess_time.csv
-                    test_result/Experiment3A_price_fusion_different_excess_time.xlsx
+                    test_result/Experiment3A_price_fusion_different_forward_window.csv
+                    test_result/Experiment3A_price_fusion_different_forward_window.xlsx
 
 
 
@@ -540,7 +540,7 @@ details:
 
                 start=01.01.2006
                 end=01.01.2009
-                excess_time=15
+                forward_window=15
 
                 P1 is the short-term portfolios in 01.02.2006
                 P2 is the long-term portfolios in 02.02.2006

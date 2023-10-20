@@ -5,7 +5,7 @@ import pandas as pd
 import pypfopt
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
-
+import math
 import data_handler_price
 import logging
 import datetime
@@ -99,6 +99,66 @@ def compute_profit(portfolios:pd.DataFrame,returns:pd.DataFrame):
 
     return profit
 
+def compute_profit_from_short_to_long(portfolios:pd.DataFrame,returns_short_term:pd.DataFrame,timestamp_long_term:datetime.datetime):
+    """
+    compute portfolios profit based the corresponding returns
+    :arg
+    -------
+        historical_prices:pd.DataFrame
+                The historical stock prices
+    :return
+    -------
+        return_from_price:pd.dataframe
+                The historical stock return
+    """
+
+    timestamp_long_term=timestamp_long_term-datetime.timedelta(days=1)
+    returns= match_return_portfolio_by_time_interval(returns_short_term,start_time=portfolios.index[0],end_time=timestamp_long_term)
+   # returns=returns_short_term.loc(return_index_list)
+    returns=returns.add(1)
+    returns.sort_index(ascending=True)
+
+    result=returns.cumprod(axis=0)
+    final_return=result.iloc[-1]
+
+    portfolios.sort_index(ascending=True)
+    portfolios.index=[timestamp_long_term]
+    profit=portfolios.mul(final_return)
+    profit=profit-portfolios
+    profit["Profit"]=profit.sum(axis=1,numeric_only=True)
+    #profit["Profit"]= profit["Profit"]-1
+    return profit
+
+
+def computer_profit_by_time_interval(portfolios:pd.DataFrame,returns:pd.DataFrame,
+                                     start_time:datetime.datetime,end_time:datetime.datetime):
+    """
+        compute portfolios profit based the corresponding returns
+        :arg
+        -------
+            historical_prices:pd.DataFrame
+                    The historical stock prices
+        :return
+        -------
+            return_from_price:pd.dataframe
+                    The historical stock return
+        """
+    returns = match_return_portfolio(historical_return=returns, portfolios=portfolios)
+    returns.sort_index(ascending=True)
+    portfolios.sort_index(ascending=True)
+    profit = portfolios.mul(returns, axis=0)
+    profit["Profit"] = profit.sum(axis=1, numeric_only=True)
+
+    return profit
+
+
+def match_return_portfolio_by_time_interval(historical_return:pd.DataFrame,
+                                     start_time:datetime.datetime,end_time:datetime.datetime):
+
+    historical_return=historical_return.loc[start_time:end_time]
+
+
+    return historical_return
 
 def match_return_portfolio(historical_return:pd.DataFrame,portfolios:pd.DataFrame):
 
@@ -107,8 +167,6 @@ def match_return_portfolio(historical_return:pd.DataFrame,portfolios:pd.DataFram
     assert len(historical_return) == len(portfolios)
 
     return historical_return
-
-
 
 def find_all_matched_times_by_length(trading_time:pandas.DataFrame,begin_time:datetime.datetime,time_length:int):
     """
@@ -161,7 +219,7 @@ def rebalance_portfolio(portfolio:pd.DataFrame):
     """
    # portfolio=portfolio.apply(rebalance_function,axis=1)
 
-
+    before_porfolio=portfolio
     for ele in portfolio.index:
         ddd=portfolio.loc[ele]
         sum_row=np.sum(ddd)
@@ -170,3 +228,7 @@ def rebalance_portfolio(portfolio:pd.DataFrame):
     return portfolio
 
 
+def compute_cumulative_profit(df_profit:pandas.DataFrame):
+    profit_list=df_profit["Profit"].tolist()
+    cum_pred_profit=math.prod(list(map(lambda x:x+1,profit_list)))
+    return cum_pred_profit

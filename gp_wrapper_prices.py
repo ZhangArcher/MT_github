@@ -445,9 +445,9 @@ if __name__ == '__main__':
     # print("Y_pred_mean:",Y_pred_mean)
     # print("Y_pred_actual:",Y_pred_actual)
     # print("score:",loss_score)
-
-    print("df_mean:",df_mean)
-    print("df_var:",df_var)
-    print("loss_score_pred:",np.mean(loss_score_pred))
-    print("loss_score_trad:",np.mean(loss_score_trad))
-    print("asdsdsd")
+    #
+    # print("df_mean:",df_mean)
+    # print("df_var:",df_var)
+    # print("loss_score_pred:",np.mean(loss_score_pred))
+    # print("loss_score_trad:",np.mean(loss_score_trad))
+    # print("asdsdsd")

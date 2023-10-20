@@ -1,0 +1,96 @@
+        forward_window: 1
+        averaeg error of fusion :  2.2633542474930106
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.800405689273728
+        forward_window: 2
+        averaeg error of fusion :  1.7623409891225517
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7604206826167696
+        forward_window: 3
+        averaeg error of fusion :  2.224713001609339
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7361150862422348
+        forward_window: 4
+        averaeg error of fusion :  2.209538282918915
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7584477296513634
+        forward_window: 5
+        averaeg error of fusion :  2.584170370922463
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7535784678809212
+        forward_window: 6
+        averaeg error of fusion :  2.317553621482765
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7178692133690583
+        forward_window: 7
+        averaeg error of fusion :  2.4361812130906535
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.71535640393976
+        forward_window: 8
+        averaeg error of fusion :  2.439227831186964
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.727133856443261
+        forward_window: 9
+        averaeg error of fusion :  2.9807151990405423
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.7089212219386687
+        forward_window: 10
+        averaeg error of fusion :  4.154039185176938
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.6710203537830175
+        forward_window: 11
+        averaeg error of fusion :  3.069697808414368
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.6045715304283281
+        forward_window: 12
+        averaeg error of fusion :  2.9885164447120816
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.5550625199695944
+        forward_window: 13
+        averaeg error of fusion :  2.3794704153594437
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.5400260195396507
+        forward_window: 14
+        averaeg error of fusion :  2.5925792769042686
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.5187936851227872
+        forward_window: 15
+        averaeg error of fusion :  2.7597976728078795
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.5036295792440642
+        forward_window: 16
+        averaeg error of fusion :  2.7277243214187554
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.4407097183270354
+        forward_window: 17
+        averaeg error of fusion :  3.226424110526183
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.4098666344361084
+        forward_window: 18
+        averaeg error of fusion :  2.814575948861405
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.3597923500567415
+        forward_window: 19
+        averaeg error of fusion :  2.7342980446031424
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.3609125544872713
+        forward_window: 20
+        averaeg error of fusion :  2.639943197278022
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.3176454569412743
+        forward_window: 21
+        averaeg error of fusion :  2.4987394366505686
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.330498880146528
+        forward_window: 22
+        averaeg error of fusion :  2.3820573888349554
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.3024381585712326
+        forward_window: 23
+        averaeg error of fusion :  2.644972222820885
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.2611602860252942
+        forward_window: 24
+        averaeg error of fusion :  2.377108661587745
+        average error of long_term prediction :  1.549716047855353
+        average error of short_term prediction :  1.2162782394630864
